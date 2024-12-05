@@ -35,8 +35,7 @@ struct StopView : View {
     }
     
     private func Report() async {
-        print("バックグラウンドorフォアグラウンド直前（.inactive）")
-        let reporter = API(channelid: "1311228113602215988", name: "犬柴Mobile")
+        let reporter = API(channelid: "1311228113602215988", name: "Alomafire")
         
         reporter.postAPI()
     }
