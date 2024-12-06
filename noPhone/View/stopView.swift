@@ -3,20 +3,16 @@ import SwiftUI
 struct StopView : View {
     @Environment(\.scenePhase) private var scenePhase
     
-    @Binding var isWaiting: Bool
+    @Binding var Screen: Screen
     
     @State var Moniter: Bool = true
-    init(isWaiting: Binding<Bool>) {
-        self._isWaiting = isWaiting
-    }
 
     var body: some View {
         VStack {
             Button {
-                isWaiting.toggle()
+                Screen = .start
             } label: {
                 ZStack{
-                   
                     Rectangle()
                         .foregroundColor(.blue)
                         .frame(width: 200, height: 200)

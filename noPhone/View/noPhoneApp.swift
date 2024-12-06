@@ -2,11 +2,18 @@ import SwiftUI
 
 @main
 struct noPhoneApp: App {
-    @State var isWaiting = true
+    @State var Screen:Screen = .start
     var body: some Scene {
         WindowGroup {
             
-            if isWaiting { StartView(isWaiting: $isWaiting) } else { StopView(isWaiting: $isWaiting) }
+            switch Screen {
+            case .start:
+                StartView(Screen: $Screen)
+            case .stop:
+                StopView(Screen: $Screen)
+            case .timer:
+                TimerView(Screen: $Screen)
+            }
             
         }
     }
