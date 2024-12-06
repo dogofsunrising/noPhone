@@ -15,7 +15,14 @@ struct StopView : View {
             Button {
                 isWaiting.toggle()
             } label: {
-                Text("Stop")
+                ZStack{
+                   
+                    Rectangle()
+                        .foregroundColor(.blue)
+                        .frame(width: 200, height: 200)
+                    Text("Stop")
+                        .foregroundColor(.white)
+                }
             }
         }
         .onChange(of: scenePhase) {

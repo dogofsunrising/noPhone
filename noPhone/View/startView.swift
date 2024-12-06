@@ -12,7 +12,14 @@ struct StartView: View {
             Button {
                 isWaiting.toggle()
             } label: {
-                Text("Start")
+                ZStack{
+                   
+                    Rectangle()
+                        .foregroundColor(.blue)
+                        .frame(width: 200, height: 200)
+                    Text("Start")
+                        .foregroundColor(.white)
+                }
             }
         }
     }
