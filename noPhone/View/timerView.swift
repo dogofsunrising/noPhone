@@ -46,7 +46,7 @@ struct TimerView: View {
                 .padding()
             }
             .onAppear {
-                            loadSelectedTimer() // 保存されたタイマーをロード
+                loadSelectedTimer() // 保存されたタイマーをロード
             }
             .padding()
             .navigationBarTitle("タイマー選択", displayMode: .inline)
