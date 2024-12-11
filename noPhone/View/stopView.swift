@@ -1,4 +1,5 @@
 import SwiftUI
+import CoreMotion
 
 struct StopView : View {
     @Environment(\.scenePhase) private var scenePhase
@@ -18,6 +19,13 @@ struct StopView : View {
     let timer = Timer.publish(every: 1.0, on: .main, in: .common).autoconnect()
         
 
+    
+    private let motionManager = CMMotionManager()
+    @State private var core_x: Double = 0.0
+    @State private var core_y: Double = 0.0
+    @State private var core_z: Double = 0.0
+    @State private var core  : Bool = true
+    
     var body: some View {
         VStack {
             WhatTimer(timer: time)
@@ -42,6 +50,8 @@ struct StopView : View {
             }else{
                 timerActive = false
             }
+            
+            start()
         }
         .onDisappear {
             timerActive = false // タイマーを停止
@@ -108,5 +118,16 @@ struct StopView : View {
         reporter.postAPI()
     }
     
-    
+    private func start() {
+        if motionManager.isAccelerometerAvailable {
+            motionManager.accelerometerUpdateInterval = 0.5
+            motionManager.startAccelerometerUpdates(to: .main) { data, error in
+                guard let data else { return }
+                core_x = data.acceleration.x
+                core_y = data.acceleration.y
+                core_z = data.acceleration.z
+                core = (core_x == 0 || core_y == 0 || core_z == 0)
+            }
+        }
+    }
 }

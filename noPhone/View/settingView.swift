@@ -21,36 +21,30 @@ struct SettingView: View {
                         setting = false // ポップアップを閉じる
                     }
                 }
-            
             VStack {
                 Spacer()
-
                 // 白い四角形
                 VStack(spacing: 20) {
                     Text("設定の変更")
                         .font(.headline)
-
                     // チャンネルIDを入力するTextField
                     TextField("チャンネルIDを入力", text: $channelid)
                         .padding()
                         .background(Color(UIColor.systemGray6))
                         .cornerRadius(8)
                         .padding(.horizontal, 20)
-
                     // ユーザー名を入力するTextField
                     TextField("ユーザー名を入力", text: $username)
                         .padding()
                         .background(Color(UIColor.systemGray6))
                         .cornerRadius(8)
                         .padding(.horizontal, 20)
-
                     // エラーメッセージを表示
                     if let errorMessage = errorMessage {
                         Text(errorMessage)
                             .foregroundColor(.red)
                             .font(.caption)
                     }
-
                     // 保存ボタン
                     Button(action: {
                         if channelid.isEmpty || username.isEmpty {
@@ -66,15 +60,12 @@ struct SettingView: View {
                             .foregroundColor(.blue)
                             .padding(.top, 10)
                     }
-
-                   
                 }
                 .padding()
                 .background(Color.white)
                 .cornerRadius(16)
                 .shadow(radius: 10)
                 .padding(.horizontal, 40) // 四角形の幅を調整
-
                 Spacer()
             }
         }
