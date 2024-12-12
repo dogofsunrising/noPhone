@@ -2,8 +2,9 @@ import SwiftUI
 
 struct TimerView: View {
     @Binding var Screen: Screen
-    @State var timerList: [Int] = [797401, 4791, 321, 2, 481] // Int型のリスト
+    @State var timerList: [Int] = [] // Int型のリスト
     @State private var selectedTimerIndex: Int? = nil // 選択されているタイマーのインデックス
+    @State private var showAddTimerSheet: Bool = false
 
     var body: some View {
         NavigationView {
@@ -42,7 +43,18 @@ struct TimerView: View {
             }
             .padding()
             .navigationBarTitle("タイマー選択", displayMode: .inline)
-            .navigationBarItems(leading: Button("戻る", action: onBackButtonPressed))
+            .navigationBarItems(
+                leading: Button("戻る", action: onBackButtonPressed),
+                trailing: Button(action: {
+                    showAddTimerSheet = true
+                }) {
+                    Image(systemName: "plus")
+                        .foregroundColor(.blue)
+                }
+            )
+            .sheet(isPresented: $showAddTimerSheet) {
+                AddTimerView(isPresented: $showAddTimerSheet, timerList: $timerList)
+            }
         }
     }
 
