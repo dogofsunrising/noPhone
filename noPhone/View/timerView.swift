@@ -7,46 +7,38 @@ struct TimerView: View {
 
     var body: some View {
         NavigationView {
-            VStack {
-                if timerList.isEmpty {
-                    Text("タイマーリストが空です")
-                        .foregroundColor(.gray)
-                        .padding()
-                } else {
-                    ForEach(timerList.indices, id: \.self) { index in
-                        HStack {
-                            WhatTimer(timer: timerList[index]) // 各タイマーの表示用ビュー
-                            Spacer()
-                            Toggle("", isOn: Binding(
-                                get: {
-                                    selectedTimerIndex == index
-                                },
-                                set: { isOn in
-                                    if isOn {
-                                        selectedTimerIndex = index // このスイッチをオンに
-                                    } else {
-                                        selectedTimerIndex = nil // オフにする
+            ZStack{
+                VStack {
+                    if timerList.isEmpty {
+                        Text("タイマーリストが空です")
+                            .foregroundColor(.gray)
+                            .padding()
+                    } else {
+                        ForEach(timerList.indices, id: \.self) { index in
+                            HStack {
+                                WhatTimer(timer: timerList[index])
+                                Spacer()
+                                Toggle("", isOn: Binding(
+                                    get: {
+                                        selectedTimerIndex == index
+                                    },
+                                    set: { isOn in
+                                        if isOn {
+                                            selectedTimerIndex = index
+                                        } else {
+                                            selectedTimerIndex = nil
+                                        }
                                     }
-                                }
-                            ))
-                            .toggleStyle(SwitchToggleStyle(tint: .blue)) // スイッチの色を設定
+                                ))
+                                .toggleStyle(SwitchToggleStyle(tint: .blue))
+                            }
+                            .padding(.vertical, 5)
                         }
-                        .padding(.vertical, 5)
                     }
                 }
-
-                // 保存ボタン
-                Button(action: saveSelectedTimer) {
-                    Text("タイマーを保存")
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(Color.blue)
-                        .cornerRadius(8)
+                .onAppear {
+                    loadSelectedTimer() // 保存されたタイマーをロード
                 }
-                .padding()
-            }
-            .onAppear {
-                loadSelectedTimer() // 保存されたタイマーをロード
             }
             .padding()
             .navigationBarTitle("タイマー選択", displayMode: .inline)
@@ -74,5 +66,6 @@ struct TimerView: View {
     // 戻るボタンが押されたときに実行される関数
     private func onBackButtonPressed() {
         Screen = .start
+        saveSelectedTimer()
     }
 }

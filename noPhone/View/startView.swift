@@ -73,8 +73,8 @@ struct StartView: View {
             username = UserDefaults.standard.string(forKey: "username") ?? ""
             time = UserDefaults.standard.integer(forKey: "selectedTimer")
             if channelid.isEmpty || username.isEmpty {
-                showAlert = true // アラートを表示
-                setting.toggle() // 設定画面を表示
+                showAlert = true
+                setting.toggle()
             } else {
                 showAlert = false
             }
