@@ -15,29 +15,40 @@ struct TimerView: View {
                             .foregroundColor(.gray)
                             .padding()
                     } else {
-                        ForEach(timerList.indices, id: \.self) { index in
-                            HStack {
-                                WhatTimer(timer: timerList[index])
-                                Spacer()
-                                Toggle("", isOn: Binding(
-                                    get: {
-                                        selectedTimerIndex == index
-                                    },
-                                    set: { isOn in
-                                        if isOn {
-                                            selectedTimerIndex = index
-                                        } else {
-                                            selectedTimerIndex = nil
-                                        }
+                        List{
+                            ForEach(timerList.indices, id: \.self) { index in
+                                HStack {
+                                    WhatTimer(timer: timerList[index])
+                                    Spacer()
+                                    Button(action: {
+                                        removeTimer(at: index)
+                                    }) {
+                                        Image(systemName: "trash")
+                                        
                                     }
-                                ))
-                                .toggleStyle(SwitchToggleStyle(tint: .blue))
+                                    Toggle("", isOn: Binding(
+                                        get: {
+                                            selectedTimerIndex == index
+                                        },
+                                        set: { isOn in
+                                            if isOn {
+                                                selectedTimerIndex = index
+                                            } else {
+                                                selectedTimerIndex = nil
+                                            }
+                                        }
+                                    ))
+                                    .toggleStyle(SwitchToggleStyle(tint: .blue))
+                                }
+                                .padding(.vertical, 5)
                             }
-                            .padding(.vertical, 5)
                         }
+                        .listStyle(.plain)
+                        .scrollIndicators(.hidden)
                     }
                 }
                 .onAppear {
+                    initTimer() //ローカルのタイマーをリストか
                     loadSelectedTimer() // 保存されたタイマーをロード
                 }
             }
@@ -66,18 +77,33 @@ struct TimerView: View {
     }
 
     // 保存されたタイマーをロードする関数
-      private func loadSelectedTimer() {
-          let savedTimer = UserDefaults.standard.integer(forKey: "selectedTimer")
-          if let index = timerList.firstIndex(of: savedTimer) {
-              selectedTimerIndex = index
-          } else {
-              selectedTimerIndex = nil
-          }
+    private func loadSelectedTimer() {
+      let savedTimer = UserDefaults.standard.integer(forKey: "selectedTimer")
+      if let index = timerList.firstIndex(of: savedTimer) {
+          selectedTimerIndex = index
+      } else {
+          selectedTimerIndex = nil
       }
+    }
     
     // 戻るボタンが押されたときに実行される関数
     private func onBackButtonPressed() {
         Screen = .start
         saveSelectedTimer()
+    }
+    
+    private func initTimer() {
+        timerList = UserDefaults.standard.array(forKey: "timerList") as? [Int] ?? []
+    }
+    
+    private func removeTimer(at index: Int) {
+        guard index >= 0 && index < timerList.count else { return } // 安全に範囲を確認
+        timerList.remove(at: index)
+        saveTimer()
+    }
+    
+    // タイマーを保存する関数
+    private func saveTimer() {
+        UserDefaults.standard.set(timerList, forKey: "timerList")
     }
 }

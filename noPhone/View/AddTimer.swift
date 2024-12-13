@@ -81,6 +81,7 @@ struct AddTimerView: View {
             timerList.append(totalSeconds)
             timerList.sort()
         }
+        UserDefaults.standard.set(timerList, forKey: "timerList")
         isPresented = false
     }
 }
