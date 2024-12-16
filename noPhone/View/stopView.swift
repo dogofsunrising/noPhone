@@ -14,11 +14,11 @@ struct StopView : View {
     @State private var channelid: String = ""
     @State private var username: String = ""
     @State private var time: Int = 0
-    
+    @State private var initimer:Int = 0
     @State private var timerActive: Bool = false // タイマーが動作中かどうか
-    let timer = Timer.publish(every: 1.0, on: .main, in: .common).autoconnect()
+    @State var timer = Timer.publish(every: 1.0, on: .main, in: .common).autoconnect()
         
-
+    @State var popmess:String = ""
     
     private let motionManager = CMMotionManager()
     @State private var core_x: Double = 0.0
@@ -27,24 +27,32 @@ struct StopView : View {
     @State private var core  : Bool = true
     
     var body: some View {
-        VStack {
-            WhatTimer(timer: time)
-            Button {
-                Screen = .start
-            } label: {
-                ZStack{
-                    Rectangle()
-                        .foregroundColor(.blue)
-                        .frame(width: 200, height: 200)
-                    Text("Stop")
-                        .foregroundColor(.white)
+        ZStack{
+            VStack {
+                WhatTimer(timer: time)
+                Button {
+                    Screen = .start
+                } label: {
+                    ZStack{
+                        Rectangle()
+                            .foregroundColor(.blue)
+                            .frame(width: 200, height: 200)
+                        Text("Stop")
+                            .foregroundColor(.white)
+                    }
                 }
+            }
+            if(!Moniter){
+                Color.black.opacity(0.4)
+                    .edgesIgnoringSafeArea(.all)
+                LoadingAlert()
             }
         }
         .onAppear {
             channelid = UserDefaults.standard.string(forKey: "channelid") ?? ""
             username = UserDefaults.standard.string(forKey: "username") ?? ""
             time = UserDefaults.standard.integer(forKey: "selectedTimer")
+            initimer = time
             if(time != 0){
                 timerActive = true
             }else{
@@ -60,9 +68,11 @@ struct StopView : View {
             if(timerActive){
                 time -= 1
                 if(time == 0){
+                    Moniter = false
                     timerActive = false
-                    showAlert = true
-                    AlertType = .finish
+                    Task{
+                        await Report(channelid: channelid, name: username, realtime: time, close: true,inittime: initimer)
+                    }
                     
                 }
             }
@@ -79,7 +89,7 @@ struct StopView : View {
                 Moniter = false
                 timerActive = false
                 Task{
-                    await Report(channelid: channelid, name: username)
+                    await Report(channelid: channelid, name: username, realtime: time, close: false,inittime: initimer)
                 }
                 
             }
@@ -89,7 +99,7 @@ struct StopView : View {
             case .miss:
                 Alert(
                     title: Text("終了します"),
-                    message: Text("スマホを封印しましょう"),
+                    message: Text(popmess),
                     dismissButton: .default(Text("OK"),action: {
                         Screen = .start
                     })
@@ -97,9 +107,11 @@ struct StopView : View {
             case .finish:
                 Alert(
                     title: Text("おめでとう！"),
-                    message: Text("タイマーが終了しました"),
+                    message: Text(popmess),
                     dismissButton: .default(Text("OK"),action: {
-                        Screen = .start
+                        Task{
+                            Screen = .start
+                        }
                     })
                 )
             case nil:
@@ -111,12 +123,35 @@ struct StopView : View {
     }
     
     
-    private func Report(channelid:String, name:String) async {
-        let reporter = API(channelid: channelid, name: name)
-        showAlert = true
-        AlertType = .miss
-        reporter.postAPI()
+    private func Report(channelid: String, name: String, realtime: Int, close: Bool, inittime: Int) async {
+        let realtime = inittime - realtime
+        let reporter = API(channelid: channelid, name: name, time: realtime, close: close)
+        if let message = await reporter.postAPI() {
+            popmess = message
+            if(close){
+                popmess = message
+                AlertType = .finish
+            } else{
+                popmess = message
+                AlertType = .miss
+            }
+            Moniter = true
+            showAlert = true
+        } else {
+            if(close){
+                popmess = "おめでとうございます"
+                AlertType = .finish
+            } else{
+                popmess = "封印しましょう"
+                AlertType = .miss
+            }
+            Moniter = true
+            showAlert = true
+        }
+        
+        
     }
+    
     
     private func start() {
         if motionManager.isAccelerometerAvailable {
