@@ -14,6 +14,8 @@ struct WhatTimer: View {
     var body: some View{
         VStack{
             Text(String(format: "%02d:%02d:%02d", hours, minutes, seconds))
+                .font(.largeTitle)
+                .fontWeight(.bold)
         }
     }
     

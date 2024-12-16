@@ -6,9 +6,9 @@ struct GradientBackgroundView: View {
             // グラデーション背景
             LinearGradient(
                 gradient: Gradient(colors: [
-                    Color.blue.opacity(0.9), // 下: 濃い青
-                    Color.blue.opacity(0.6), // 中間: 少し明るい青
-                    Color.cyan.opacity(0.4)  // 上: 明るいシアン
+                    darkBlue, // 下: 濃い青
+                    mediumBlue, // 中間: 少し明るい青
+                    lightBlue  // 上: 明るいシアン
                 ]),
                 startPoint: .bottom,  // 下から始まる
                 endPoint: .top        // 上で終わる

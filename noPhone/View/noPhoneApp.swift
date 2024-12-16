@@ -7,6 +7,7 @@ struct noPhoneApp: App {
     var body: some Scene {
         WindowGroup {
             ZStack {
+                GradientBackgroundView()
                 if Screen == .start {
                     StartView(Screen: $Screen)
                        

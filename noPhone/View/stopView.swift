@@ -15,7 +15,8 @@ struct StopView : View {
     @State private var username: String = ""
     @State private var time: Int = 0
     @State private var initimer:Int = 0
-    @State private var timerActive: Bool = false // タイマーが動作中かどうか
+    @State private var timerActive: Bool = false
+    @State private var countup:Bool = false
     @State var timer = Timer.publish(every: 1.0, on: .main, in: .common).autoconnect()
         
     @State var popmess:String = ""
@@ -24,21 +25,32 @@ struct StopView : View {
     @State private var core_x: Double = 0.0
     @State private var core_y: Double = 0.0
     @State private var core_z: Double = 0.0
-    @State private var core  : Bool = true
+    
+    @State private var inicore_x: Double = 0.0
+    @State private var inicore_y: Double = 0.0
+    @State private var inicore_z: Double = 0.0
+    
+    @State private var core  : Bool = false
     
     var body: some View {
         ZStack{
             VStack {
                 WhatTimer(timer: time)
-                Button {
-                    Screen = .start
-                } label: {
-                    ZStack{
-                        Rectangle()
-                            .foregroundColor(.blue)
-                            .frame(width: 200, height: 200)
-                        Text("Stop")
-                            .foregroundColor(.white)
+                if(countup){
+                    Button {
+                        Task{
+                            Moniter = false
+                            await Report(channelid: channelid, name: username, realtime: time, close: true, inittime: initimer)
+                            countup = false
+                        }
+                    } label: {
+                        ZStack{
+                            Rectangle()
+                                .foregroundColor(.blue)
+                                .frame(width: 200, height: 200)
+                            Text("Stop")
+                                .foregroundColor(.white)
+                        }
                     }
                 }
             }
@@ -57,23 +69,40 @@ struct StopView : View {
                 timerActive = true
             }else{
                 timerActive = false
+                countup = true
             }
             
-            start()
+            if motionManager.isAccelerometerAvailable {
+                motionManager.accelerometerUpdateInterval = 0.5
+                motionManager.startAccelerometerUpdates(to: .main) { data, error in
+                    guard let data else { return }
+                    inicore_x = data.acceleration.x
+                    inicore_y = data.acceleration.y
+                    inicore_z = data.acceleration.z
+                }
+            }
+            
         }
         .onDisappear {
             timerActive = false // タイマーを停止
         }
         .onReceive(timer) { _ in
-            if(timerActive){
-                time -= 1
-                if(time == 0){
-                    Moniter = false
-                    timerActive = false
-                    Task{
-                        await Report(channelid: channelid, name: username, realtime: time, close: true,inittime: initimer)
+            Task{
+                if(timerActive){
+                    time -= 1
+                    await corestart()
+                    if(time == 0){
+                        Moniter = false
+                        timerActive = false
+                        Task{
+                            await Report(channelid: channelid, name: username, realtime: time, close: true,inittime: initimer)
+                        }
+                        
                     }
-                    
+                }
+                if(countup){
+                    time += 1
+                    await corestart()
                 }
             }
             
@@ -124,8 +153,11 @@ struct StopView : View {
     
     
     private func Report(channelid: String, name: String, realtime: Int, close: Bool, inittime: Int) async {
-        let realtime = inittime - realtime
-        let reporter = API(channelid: channelid, name: name, time: realtime, close: close)
+        var Ktime = inittime - realtime
+        if(Ktime < 0){
+            Ktime = realtime
+        }
+        let reporter = API(channelid: channelid, name: name, time: Ktime, close: close)
         if let message = await reporter.postAPI() {
             popmess = message
             if(close){
@@ -153,7 +185,7 @@ struct StopView : View {
     }
     
     
-    private func start() {
+    private func corestart() async {
         if motionManager.isAccelerometerAvailable {
             motionManager.accelerometerUpdateInterval = 0.5
             motionManager.startAccelerometerUpdates(to: .main) { data, error in
@@ -161,8 +193,15 @@ struct StopView : View {
                 core_x = data.acceleration.x
                 core_y = data.acceleration.y
                 core_z = data.acceleration.z
-                core = (core_x == 0 || core_y == 0 || core_z == 0)
+                
+                core = !(abs(inicore_x - core_x) <= 0.1 || abs(inicore_y - core_y) <= 0.1 || abs(inicore_z - core_z) <= 0.1)
             }
+        }
+        
+        if core {
+            countup = false
+            Moniter = false
+            await Report(channelid: channelid, name: username, realtime: time, close: false, inittime: initimer)
         }
     }
 }

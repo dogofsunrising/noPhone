@@ -21,10 +21,11 @@ struct StartView: View {
                 } label: {
                     ZStack{
                         Rectangle()
-                            .foregroundColor(.blue)
+                            .foregroundColor(ButtonColor)
                             .frame(width: 200, height: 200)
+                            .cornerRadius(20)
                         Text("Start")
-                            .foregroundColor(.white)
+                            .foregroundColor(darkBlue)
                     }
                 }
                 HStack{

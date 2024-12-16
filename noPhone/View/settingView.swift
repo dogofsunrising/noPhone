@@ -62,7 +62,11 @@ struct SettingView: View {
                     }
                 }
                 .padding()
-                .background(Color.white)
+                .background(
+                    Color(UIColor { traitCollection in
+                        return traitCollection.userInterfaceStyle == .dark ? UIColor.black : UIColor.white
+                    })
+                )
                 .cornerRadius(16)
                 .shadow(radius: 10)
                 .padding(.horizontal, 40) // 四角形の幅を調整
