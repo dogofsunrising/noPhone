@@ -37,7 +37,7 @@ struct StartView: View {
                             Image(systemName: "gear") // 歯車アイコン
                                 .resizable() // サイズを変更可能にする
                                 .frame(width: 70, height: 70) // 幅と高さを指定
-                                .foregroundColor(.gray) // アイコンの色を白に設定
+                                .foregroundColor(ButtonColor) // アイコンの色を白に設定
                         }
                         
                     }
@@ -49,12 +49,26 @@ struct StartView: View {
                             Image(systemName: "timer") // アイコン
                                     .resizable()
                                     .frame(width: 70, height: 70)
-                                    .foregroundColor(isOn ? .blue : .gray) // 状態によって色を変更
+                                    .foregroundColor(isOn ? .blue : ButtonColor) // 状態によって色を変更
                         }
                         
                     }
                     Spacer()
                 }
+                
+                Button {
+                    Screen = .recode
+                } label: {
+                    ZStack{
+                        Rectangle()
+                            .foregroundColor(ButtonColor)
+                            .frame(width: 200, height: 35)
+                            .cornerRadius(20)
+                        Text("記録")
+                            .foregroundColor(darkBlue)
+                    }
+                }
+                
             }
             
             if(setting){

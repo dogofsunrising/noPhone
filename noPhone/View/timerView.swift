@@ -5,7 +5,9 @@ struct TimerView: View {
     @State var timerList: [Int] = [] // Int型のリスト
     @State private var selectedTimerIndex: Int? = nil // 選択されているタイマーのインデックス
     @State private var showAddTimerSheet: Bool = false
-
+    
+    @State private var showAlert: Bool = false
+    @State private var pendingIndex: Int? = nil
     var body: some View {
         NavigationView {
             ZStack{
@@ -17,15 +19,16 @@ struct TimerView: View {
                     } else {
                         List{
                             ForEach(timerList.indices, id: \.self) { index in
+                                Button(action: {
+                                    pendingIndex = index
+                                    showAlert = true
+                                }) {
                                 HStack {
                                     WhatTimer(timer: timerList[index])
-                                    Spacer()
-                                    Button(action: {
-                                        removeTimer(at: index)
-                                    }) {
-                                        Image(systemName: "trash")
+                                   
+                                    
                                         
-                                    }
+                                    
                                     Toggle("", isOn: Binding(
                                         get: {
                                             selectedTimerIndex == index
@@ -41,6 +44,7 @@ struct TimerView: View {
                                     .toggleStyle(SwitchToggleStyle(tint: .blue))
                                 }
                                 .padding(.vertical, 5)
+                                }
                             }
                         }
                         .listStyle(.plain)
@@ -65,6 +69,20 @@ struct TimerView: View {
             )
             .sheet(isPresented: $showAddTimerSheet) {
                 AddTimerView(isPresented: $showAddTimerSheet, timerList: $timerList)
+            }
+            .alert(isPresented: $showAlert) {
+                Alert(
+                    title: Text("削除しますか？"),
+                    message: Text("この操作はやり直せません"),
+                    primaryButton: .destructive(Text("削除")) {
+                        Task{
+                            if let index = pendingIndex { // 削除予定のインデックスを確認
+                                removeTimer(at: index)
+                            }
+                        }
+                    },
+                    secondaryButton: .cancel(Text("キャンセル"))
+                )
             }
         }
     }

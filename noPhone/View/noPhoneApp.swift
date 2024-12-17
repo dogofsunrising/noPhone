@@ -17,6 +17,8 @@ struct noPhoneApp: App {
                 } else if Screen == .timer {
                     TimerView(Screen: $Screen)
                         
+                } else if Screen == .recode {
+                    RecodeView(Screen: $Screen)
                 }
             }
             .animation(.easeInOut(duration: 0.5), value: Screen)

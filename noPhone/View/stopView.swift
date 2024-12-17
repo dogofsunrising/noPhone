@@ -33,6 +33,10 @@ struct StopView : View {
     
     @State private var core  : Bool = false
     
+    
+    //タイマー保存
+    @State private var date: Date = Date()
+    
     var body: some View {
         ZStack{
             VStack {
@@ -164,6 +168,7 @@ struct StopView : View {
         if(Ktime < 0){
             Ktime = realtime
         }
+        recode(date: date, realtime: Ktime, settingtime: inittime, close: close)
         let reporter = API(channelid: channelid, name: name, time: Ktime, close: close)
         if let message = await reporter.postAPI() {
             popmess = message
@@ -210,5 +215,28 @@ struct StopView : View {
             Moniter = false
             await Report(channelid: channelid, name: username, realtime: time, close: false, inittime: initimer)
         }
+    }
+    
+    private func recode(date: Date, realtime: Int, settingtime: Int, close: Bool) {
+        // 新しいデータを作成
+        let newRecode = recodeModel(date: date, realtime: realtime, settingtime: settingtime, close: close)
+        
+        // 現在のリストを取得
+        var recodeTimeList = loadRecodeListFromDefaults()
+        
+        // リストに新しいデータを追加
+        recodeTimeList.append(newRecode)
+        // エンコードして保存
+        if let encoded = try? JSONEncoder().encode(recodeTimeList) {
+            UserDefaults.standard.set(encoded, forKey: "recodelist")
+        }
+    }
+
+    private func loadRecodeListFromDefaults() -> [recodeModel] {
+        if let savedData = UserDefaults.standard.data(forKey: "recodelist"),
+           let decoded = try? JSONDecoder().decode([recodeModel].self, from: savedData) {
+            return decoded
+        }
+        return []
     }
 }

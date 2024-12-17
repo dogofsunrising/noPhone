@@ -11,7 +11,7 @@ struct LoadingAlert: View {
             ProgressView()
                 .scaleEffect(1.5)
             
-            Text("読み込み中" + String(repeating: ".", count: dotCount))
+            Text("読み込み中" + String(repeating: ".", count: dotCount) + String(repeating: " ", count: 3-dotCount))
                 .foregroundColor(.black)
                 .font(.headline)
         }
