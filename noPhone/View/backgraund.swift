@@ -17,7 +17,7 @@ struct GradientBackgroundView: View {
             
             // コンテンツ (例: おしゃれなデザイン要素)
             VStack {
-                Text("Welcome to Your App")
+                Text("Welcome to App!!")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .foregroundColor(.white)

@@ -10,6 +10,7 @@ struct StopView : View {
     
     @State private var AlertType:AlertType? = nil
     @State private var showAlert: Bool = false
+    @State private var isInBackground = false
     
     @State private var channelid: String = ""
     @State private var username: String = ""
@@ -114,13 +115,19 @@ struct StopView : View {
 //                timerActive = true
 //            }
             // バックグラウンドに行った時の処理
-            if (scenePhase == .inactive && Moniter){
+//            print("\(scenePhase)")
+            if (scenePhase == .background){
+                isInBackground = true
+            }
+            if(scenePhase == .active){
+                isInBackground = false
+            }
+            if (scenePhase == .inactive && Moniter && !isInBackground){
                 Moniter = false
                 timerActive = false
                 Task{
                     await Report(channelid: channelid, name: username, realtime: time, close: false,inittime: initimer)
                 }
-                
             }
         }
         .alert(isPresented: $showAlert) {
