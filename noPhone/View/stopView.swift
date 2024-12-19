@@ -37,16 +37,19 @@ struct StopView : View {
     //タイマー保存
     @State private var date: Date = Date()
     
+    @State private var end:Bool = false
+    
+    let musicplayer = SoundPlayer() 
     var body: some View {
         ZStack{
             VStack {
                 WhatTimer(timer: time)
+                    .animation(.easeInOut, value: time)
                 if(countup){
                     Button {
                         Task{
-                            Moniter = false
-                            await Report(channelid: channelid, name: username, realtime: time, close: true, inittime: initimer)
-                            countup = false
+                            showAlert = true
+                            AlertType = .end
                         }
                     } label: {
                         ZStack{
@@ -98,6 +101,7 @@ struct StopView : View {
                     time -= 1
                     await corestart()
                     if(time == 0){
+                        musicplayer.playMusic()
                         Moniter = false
                         timerActive = false
                         Task{
@@ -154,6 +158,20 @@ struct StopView : View {
                             Screen = .start
                         }
                     })
+                )
+            case .end:
+                Alert(
+                    title: Text("終了しますか？"),
+                    message: Text("この操作はやり直せません"),
+                    primaryButton: .destructive(Text("終了")) {
+                        Task{
+                            Moniter = false
+                            countup = false
+                            await Report(channelid: channelid, name: username, realtime: time, close: true, inittime: initimer)
+                            
+                        }
+                    },
+                    secondaryButton: .cancel(Text("キャンセル"))
                 )
             case nil:
                 Alert(title: Text("エラー"))
