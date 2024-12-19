@@ -33,7 +33,7 @@ struct GradientBackgroundView: View {
                 
                 Text("Enjoy the experience!")
                     .font(.headline)
-                    .foregroundColor(.white.opacity(0.8))
+                    .foregroundColor(.black.opacity(0.8))
                     .padding(.bottom, 50)
             }
         }

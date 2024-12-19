@@ -16,7 +16,11 @@ struct LoadingAlert: View {
                 .font(.headline)
         }
         .padding(30)
-        .background(Color.white)
+        .background(
+            Color(UIColor { traitCollection in
+                return traitCollection.userInterfaceStyle == .dark ? UIColor.black : UIColor.white
+            })
+        )
         .cornerRadius(10)
         .shadow(radius: 10)
         .onReceive(timer) { _ in

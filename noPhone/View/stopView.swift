@@ -51,10 +51,11 @@ struct StopView : View {
                     } label: {
                         ZStack{
                             Rectangle()
-                                .foregroundColor(.blue)
-                                .frame(width: 200, height: 200)
+                                .foregroundColor(ButtonColor)
+                                .frame(width: 200, height: 70)
+                                .cornerRadius(20)
                             Text("Stop")
-                                .foregroundColor(.white)
+                                .foregroundColor(darkBlue)
                         }
                     }
                 }
