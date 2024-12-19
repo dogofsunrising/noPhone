@@ -14,14 +14,42 @@ struct RecodeView: View {
                     } else {
                         List{
                             ForEach(recodeTimeList.indices, id: \.self) { index in
-                                HStack {
-                                    WhatTimer(timer: recodeTimeList[index].realtime)
-                                    Spacer()
+                                VStack{
+                                    HStack{
+                                        Spacer()
+                                        Text(formattedDate(date: recodeTimeList[index].date))
+                                            .font(.title3)
+                                        
+                                        Spacer()
+                                        if recodeTimeList[index].close {
+                                            Text("Success")
+                                                .font(.title2)
+                                                .foregroundColor(.blue)
+                                        } else {
+                                            Text("Failed")
+                                                .font(.title)
+                                                .foregroundColor(.red)
+                                        }
+                                        Spacer()
+                                        
+                                    }
+                                    HStack {
+                                        Image(systemName: "timer") // アイコン
+                                                .resizable()
+                                                .frame(width: 20, height: 20)
+                                        RecoTimer(timer: recodeTimeList[index].settingtime, close: recodeTimeList[index].close,on:false)
+                                        Image(systemName: "person.badge.clock") // アイコン
+                                                .resizable()
+                                                .frame(width: 20, height: 20)
+                                                
+                                        RecoTimer(timer: recodeTimeList[index].realtime, close: recodeTimeList[index].close,on:true)
+                                    }
                                 }
-                                .padding(.vertical, 5)
+                                .listRowBackground(recodeTimeList[index].close == true ? ButtonColor : lightPink)
                             }
                         }
-                        .listStyle(.plain)
+                        .scrollContentBackground(.hidden)
+                        .background(GradientBackgroundView())
                         .scrollIndicators(.hidden)
                     }
                 }
@@ -29,7 +57,6 @@ struct RecodeView: View {
             .onAppear(perform: {
                 recodeTimeList = loadRecodeListFromDefaults()
             })
-            .padding()
             .navigationBarTitle("記録", displayMode: .inline)
             .navigationBarItems(
                 leading: Button("戻る", action: onBackButtonPressed)
@@ -47,6 +74,12 @@ struct RecodeView: View {
             return Array(decoded.reversed()) // ここで順番を逆にする
         }
         return []
+    }
+    
+    func formattedDate(date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd" // カスタムフォーマット
+        return formatter.string(from: date)
     }
 }
 

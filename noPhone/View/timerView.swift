@@ -47,7 +47,6 @@ struct TimerView: View {
                                 }
                             }
                         }
-                        .listStyle(.plain)
                         .scrollIndicators(.hidden)
                     }
                 }
@@ -56,10 +55,16 @@ struct TimerView: View {
                     loadSelectedTimer() // 保存されたタイマーをロード
                 }
             }
-            .padding()
+            .scrollContentBackground(.hidden)
+            .background(GradientBackgroundView())
             .navigationBarTitle("タイマー選択", displayMode: .inline)
             .navigationBarItems(
-                leading: Button("戻る", action: onBackButtonPressed),
+                leading: Button(action: {
+                    onBackButtonPressed()
+                }) {
+                    Text("戻る")
+                        .foregroundColor(.blue)
+                },
                 trailing: Button(action: {
                     showAddTimerSheet = true
                 }) {

@@ -8,6 +8,7 @@ struct AddTimerView: View {
     @State private var minute: Int = 0
     @State private var second: Int = 0
 
+    @State private var notime:Bool = false
     var body: some View {
         NavigationView {
             VStack {
@@ -59,6 +60,10 @@ struct AddTimerView: View {
                         .cornerRadius(10)
                         .padding(.horizontal)
                 }
+                if(notime){
+                    Text("時間を入力してください")
+                        .foregroundColor(.red)
+                }
             }
             .navigationBarTitle("タイマー追加", displayMode: .inline)
             .navigationBarItems(
@@ -77,12 +82,16 @@ struct AddTimerView: View {
     // タイマーを保存する関数
     private func saveTimer() {
         let totalSeconds = hour * 3600 + minute * 60 + second
-        if totalSeconds > 0 {
-            timerList.append(totalSeconds)
-            timerList.sort()
+        if(totalSeconds != 0) {
+            if totalSeconds > 0 {
+                timerList.append(totalSeconds)
+                timerList.sort()
+            }
+            UserDefaults.standard.set(timerList, forKey: "timerList")
+            isPresented = false
+        } else {
+            notime = true
         }
-        UserDefaults.standard.set(timerList, forKey: "timerList")
-        isPresented = false
     }
 }
 
