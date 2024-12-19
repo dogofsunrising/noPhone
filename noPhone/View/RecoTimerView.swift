@@ -29,7 +29,7 @@ struct RecoTimer: View {
         if(hours == 0 && minutes == 0 && seconds == 0 && closeState == .neutral){
             String("設定なし")
         } else{
-            String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+            String(format: "%02dh%02dm%02ds", hours, minutes, seconds)
         }
     }
     
@@ -47,7 +47,7 @@ struct RecoTimer: View {
     var body: some View {
         Text(formattedTime)
             .foregroundColor(textColor)
-            .font(.title)
+            .font(.title3)
     }
 }
 

@@ -43,7 +43,7 @@ struct StopView : View {
     var body: some View {
         ZStack{
             VStack {
-                WhatTimer(timer: time)
+                WhatTimer2(timer: time)
                     .animation(.easeInOut, value: time)
                 if(countup){
                     Button {
@@ -229,7 +229,7 @@ struct StopView : View {
             }
         }
         
-        if core {
+        if core && Moniter{
             countup = false
             Moniter = false
             await Report(channelid: channelid, name: username, realtime: time, close: false, inittime: initimer)
@@ -237,11 +237,13 @@ struct StopView : View {
     }
     
     private func recode(date: Date, realtime: Int, settingtime: Int, close: Bool) {
-        // 新しいデータを作成
-        let newRecode = recodeModel(date: date, realtime: realtime, settingtime: settingtime, close: close)
-        
         // 現在のリストを取得
         var recodeTimeList = loadRecodeListFromDefaults()
+        
+        // 新しいデータを作成
+        let newRecode = recodeModel(num: recodeTimeList.count, date: date, realtime: realtime, settingtime: settingtime, close: close)
+        
+        
         
         // リストに新しいデータを追加
         recodeTimeList.append(newRecode)
