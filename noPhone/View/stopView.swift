@@ -10,6 +10,7 @@ struct StopView : View {
     
     @State private var AlertType:AlertType? = nil
     @State private var showAlert: Bool = false
+    @State private var isInBackground = false
     
     @State private var channelid: String = ""
     @State private var username: String = ""
@@ -32,24 +33,32 @@ struct StopView : View {
     
     @State private var core  : Bool = false
     
+    
+    //タイマー保存
+    @State private var date: Date = Date()
+    
+    @State private var end:Bool = false
+    
+    let musicplayer = SoundPlayer() 
     var body: some View {
         ZStack{
             VStack {
-                WhatTimer(timer: time)
+                WhatTimer2(timer: time)
+                    .animation(.easeInOut, value: time)
                 if(countup){
                     Button {
                         Task{
-                            Moniter = false
-                            await Report(channelid: channelid, name: username, realtime: time, close: true, inittime: initimer)
-                            countup = false
+                            showAlert = true
+                            AlertType = .end
                         }
                     } label: {
                         ZStack{
                             Rectangle()
-                                .foregroundColor(.blue)
-                                .frame(width: 200, height: 200)
+                                .foregroundColor(ButtonColor)
+                                .frame(width: 200, height: 70)
+                                .cornerRadius(20)
                             Text("Stop")
-                                .foregroundColor(.white)
+                                .foregroundColor(darkBlue)
                         }
                     }
                 }
@@ -92,6 +101,7 @@ struct StopView : View {
                     time -= 1
                     await corestart()
                     if(time == 0){
+                        musicplayer.playMusic()
                         Moniter = false
                         timerActive = false
                         Task{
@@ -114,13 +124,19 @@ struct StopView : View {
 //                timerActive = true
 //            }
             // バックグラウンドに行った時の処理
-            if (scenePhase == .inactive && Moniter){
+//            print("\(scenePhase)")
+            if (scenePhase == .background){
+                isInBackground = true
+            }
+            if(scenePhase == .active){
+                isInBackground = false
+            }
+            if (scenePhase == .inactive && Moniter && !isInBackground){
                 Moniter = false
                 timerActive = false
                 Task{
                     await Report(channelid: channelid, name: username, realtime: time, close: false,inittime: initimer)
                 }
-                
             }
         }
         .alert(isPresented: $showAlert) {
@@ -143,6 +159,20 @@ struct StopView : View {
                         }
                     })
                 )
+            case .end:
+                Alert(
+                    title: Text("終了しますか？"),
+                    message: Text("この操作はやり直せません"),
+                    primaryButton: .destructive(Text("終了")) {
+                        Task{
+                            Moniter = false
+                            countup = false
+                            await Report(channelid: channelid, name: username, realtime: time, close: true, inittime: initimer)
+                            
+                        }
+                    },
+                    secondaryButton: .cancel(Text("キャンセル"))
+                )
             case nil:
                 Alert(title: Text("エラー"))
             }
@@ -157,6 +187,7 @@ struct StopView : View {
         if(Ktime < 0){
             Ktime = realtime
         }
+        recode(date: date, realtime: Ktime, settingtime: inittime, close: close)
         let reporter = API(channelid: channelid, name: name, time: Ktime, close: close)
         if let message = await reporter.postAPI() {
             popmess = message
@@ -198,10 +229,35 @@ struct StopView : View {
             }
         }
         
-        if core {
+        if core && Moniter{
             countup = false
             Moniter = false
             await Report(channelid: channelid, name: username, realtime: time, close: false, inittime: initimer)
         }
+    }
+    
+    private func recode(date: Date, realtime: Int, settingtime: Int, close: Bool) {
+        // 現在のリストを取得
+        var recodeTimeList = loadRecodeListFromDefaults()
+        
+        // 新しいデータを作成
+        let newRecode = recodeModel(num: recodeTimeList.count, date: date, realtime: realtime, settingtime: settingtime, close: close)
+        
+        
+        
+        // リストに新しいデータを追加
+        recodeTimeList.append(newRecode)
+        // エンコードして保存
+        if let encoded = try? JSONEncoder().encode(recodeTimeList) {
+            UserDefaults.standard.set(encoded, forKey: "recodelist")
+        }
+    }
+
+    private func loadRecodeListFromDefaults() -> [recodeModel] {
+        if let savedData = UserDefaults.standard.data(forKey: "recodelist"),
+           let decoded = try? JSONDecoder().decode([recodeModel].self, from: savedData) {
+            return decoded
+        }
+        return []
     }
 }

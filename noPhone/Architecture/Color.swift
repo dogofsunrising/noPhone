@@ -4,6 +4,7 @@ var darkBlue = Color(hex: "1E90FF")
 var mediumBlue = Color(hex: "63B8FF")
 var lightBlue = Color(hex: "B0E2FF")
 
+var lightPink = Color(hex: "ffc0cb")
 
 extension Color {
     init(hex: String) {

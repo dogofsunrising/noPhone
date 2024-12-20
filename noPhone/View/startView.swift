@@ -15,16 +15,17 @@ struct StartView: View {
     var body: some View {
         ZStack{
             VStack {
-                WhatTimer(timer: time)
+                WhatTimer2(timer: time)
                 Button {
                     Screen = .stop // 画面遷移のロジック
                 } label: {
                     ZStack{
                         Rectangle()
                             .foregroundColor(ButtonColor)
-                            .frame(width: 200, height: 200)
+                            .frame(width: 300, height: 300)
                             .cornerRadius(20)
                         Text("Start")
+                            .font(.system(size: 50, weight: .bold))
                             .foregroundColor(darkBlue)
                     }
                 }
@@ -36,8 +37,8 @@ struct StartView: View {
                         HStack {
                             Image(systemName: "gear") // 歯車アイコン
                                 .resizable() // サイズを変更可能にする
-                                .frame(width: 70, height: 70) // 幅と高さを指定
-                                .foregroundColor(.gray) // アイコンの色を白に設定
+                                .frame(width: 100, height: 100) // 幅と高さを指定
+                                .foregroundColor(ButtonColor) // アイコンの色を白に設定
                         }
                         
                     }
@@ -48,13 +49,27 @@ struct StartView: View {
                         HStack {
                             Image(systemName: "timer") // アイコン
                                     .resizable()
-                                    .frame(width: 70, height: 70)
-                                    .foregroundColor(isOn ? .blue : .gray) // 状態によって色を変更
+                                    .frame(width: 100, height: 100)
+                                    .foregroundColor(isOn ? .blue : ButtonColor) // 状態によって色を変更
                         }
                         
                     }
                     Spacer()
                 }
+                
+                Button {
+                    Screen = .recode
+                } label: {
+                    ZStack{
+                        Rectangle()
+                            .foregroundColor(ButtonColor)
+                            .frame(width: 300, height: 50)
+                            .cornerRadius(20)
+                        Text("記録")
+                            .foregroundColor(darkBlue)
+                    }
+                }
+                
             }
             
             if(setting){

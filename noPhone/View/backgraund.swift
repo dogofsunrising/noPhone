@@ -17,24 +17,6 @@ struct GradientBackgroundView: View {
             
             // コンテンツ (例: おしゃれなデザイン要素)
             VStack {
-                Text("Welcome to Your App")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .foregroundColor(.white)
-                    .padding()
-                    .background(
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(Color.black.opacity(0.2))
-                            .shadow(color: .black.opacity(0.5), radius: 10, x: 0, y: 5)
-                    )
-                    .padding(.top, 100)
-                
-                Spacer()
-                
-                Text("Enjoy the experience!")
-                    .font(.headline)
-                    .foregroundColor(.white.opacity(0.8))
-                    .padding(.bottom, 50)
             }
         }
     }
