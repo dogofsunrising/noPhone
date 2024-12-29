@@ -165,9 +165,11 @@ struct StopView : View {
                     message: Text("この操作はやり直せません"),
                     primaryButton: .destructive(Text("終了")) {
                         Task{
-                            Moniter = false
-                            countup = false
-                            await Report(channelid: channelid, name: username, realtime: time, close: true, inittime: initimer)
+                            if(Moniter){
+                                Moniter = false
+                                countup = false
+                                await Report(channelid: channelid, name: username, realtime: time, close: true, inittime: initimer)
+                            }
                             
                         }
                     },

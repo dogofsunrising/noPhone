@@ -27,6 +27,14 @@ struct SettingView: View {
                 VStack(spacing: 10) {
                     Text("設定の変更")
                         .font(.headline)
+                    
+                    // ユーザー名を入力するTextField
+                    TextField("ユーザー名を入力", text: $username)
+                        .padding()
+                        .background(Color(UIColor.systemGray6))
+                        .cornerRadius(8)
+                        .padding(.horizontal, 20)
+                    
                     VStack{
                         
                         // チャンネルIDを入力するTextField
@@ -43,12 +51,7 @@ struct SettingView: View {
                                 .padding(.horizontal, 20)
                         }
                     }
-                    // ユーザー名を入力するTextField
-                    TextField("ユーザー名を入力", text: $username)
-                        .padding()
-                        .background(Color(UIColor.systemGray6))
-                        .cornerRadius(8)
-                        .padding(.horizontal, 20)
+                    
                     // エラーメッセージを表示
                     if let errorMessage = errorMessage {
                         Text(errorMessage)
