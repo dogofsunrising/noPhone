@@ -19,32 +19,35 @@ struct TimerView: View {
                     } else {
                         List{
                             ForEach(timerList.indices, id: \.self) { index in
-                                Button(action: {
-                                    pendingIndex = index
-                                    showAlert = true
-                                }) {
-                                HStack {
-                                    WhatTimer(timer: timerList[index])
-                                   
-                                    
-                                        
-                                    
-                                    Toggle("", isOn: Binding(
-                                        get: {
-                                            selectedTimerIndex == index
-                                        },
-                                        set: { isOn in
-                                            if isOn {
-                                                selectedTimerIndex = index
-                                            } else {
-                                                selectedTimerIndex = nil
+                                    VStack{
+                                        Button(action: {
+                                            pendingIndex = index
+                                            showAlert = true
+                                        }) {
+                                            HStack {
+                                                WhatTimer(timer: timerList[index])
+                                                
+                                                
+                                                
+                                                
+                                                Toggle("", isOn: Binding(
+                                                    get: {
+                                                        selectedTimerIndex == index
+                                                    },
+                                                    set: { isOn in
+                                                        if isOn {
+                                                            selectedTimerIndex = index
+                                                        } else {
+                                                            selectedTimerIndex = nil
+                                                        }
+                                                    }
+                                                ))
+                                                .toggleStyle(SwitchToggleStyle(tint: .blue))
                                             }
+                                            .padding(.vertical, 10)
                                         }
-                                    ))
-                                    .toggleStyle(SwitchToggleStyle(tint: .blue))
-                                }
-                                .padding(.vertical, 5)
-                                }
+                                    }.listRowBackground(ButtonColor)
+                                
                             }
                         }
                         .scrollIndicators(.hidden)
