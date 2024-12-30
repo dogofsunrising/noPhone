@@ -12,8 +12,6 @@ struct StopView : View {
     @State private var showAlert: Bool = false
     @State private var isInBackground = false
     
-    @State private var channelid: String = ""
-    @State private var username: String = ""
     @State private var time: Int = 0
     @State private var initimer:Int = 0
     @State private var timerActive: Bool = false
@@ -70,8 +68,6 @@ struct StopView : View {
             }
         }
         .onAppear {
-            channelid = UserDefaults.standard.string(forKey: "channelid") ?? ""
-            username = UserDefaults.standard.string(forKey: "username") ?? ""
             time = UserDefaults.standard.integer(forKey: "selectedTimer")
             initimer = time
             if(time != 0){
@@ -105,7 +101,7 @@ struct StopView : View {
                         Moniter = false
                         timerActive = false
                         Task{
-                            await Report(channelid: channelid, name: username, realtime: time, close: true,inittime: initimer)
+                            await Report(realtime: time, close: true,inittime: initimer)
                         }
                         
                     }
@@ -135,7 +131,7 @@ struct StopView : View {
                 Moniter = false
                 timerActive = false
                 Task{
-                    await Report(channelid: channelid, name: username, realtime: time, close: false,inittime: initimer)
+                    await Report(realtime: time, close: false,inittime: initimer)
                 }
             }
         }
@@ -168,7 +164,7 @@ struct StopView : View {
                             if(Moniter){
                                 Moniter = false
                                 countup = false
-                                await Report(channelid: channelid, name: username, realtime: time, close: true, inittime: initimer)
+                                await Report(realtime: time, close: true, inittime: initimer)
                             }
                             
                         }
@@ -184,14 +180,14 @@ struct StopView : View {
     }
     
     
-    private func Report(channelid: String, name: String, realtime: Int, close: Bool, inittime: Int) async {
+    private func Report(realtime: Int, close: Bool, inittime: Int) async {
         var Ktime = inittime - realtime
         if(Ktime < 0){
             Ktime = realtime
         }
         recode(date: date, realtime: Ktime, settingtime: inittime, close: close)
-        let reporter = API(channelid: channelid, name: name, time: Ktime, close: close)
-        if let message = await reporter.postAPI() {
+        let reporter = API(time: Ktime, close: close)
+        if let message = await reporter.closeAPI() {
             popmess = message
             if(close){
                 popmess = message
@@ -234,7 +230,7 @@ struct StopView : View {
         if core && Moniter{
             countup = false
             Moniter = false
-            await Report(channelid: channelid, name: username, realtime: time, close: false, inittime: initimer)
+            await Report(realtime: time, close: false, inittime: initimer)
         }
     }
     

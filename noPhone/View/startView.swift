@@ -58,8 +58,9 @@ struct StartView: View {
                         }
                     }
                 }
-                            
-                TimerView(showAlert: $showAlert, delete: $delete)
+                
+                TimerView(showAlert: $showAlert, delete: $delete, time: $time)
+                BannerContentView(navigationTitle: "Banner")
             }
             
             

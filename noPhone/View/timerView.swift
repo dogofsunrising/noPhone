@@ -7,6 +7,7 @@ struct TimerView: View {
     
     @Binding var showAlert: Bool
     @Binding var delete: DeleteType
+    @Binding var time:Int
     @State private var pendingIndex: Int? = nil
     var body: some View {
             ZStack{
@@ -32,9 +33,13 @@ struct TimerView: View {
                                                     set: { isOn in
                                                         if isOn {
                                                             selectedTimerIndex = index
+                                                            time = timerList[index]
+                                                            
                                                         } else {
                                                             selectedTimerIndex = nil
+                                                            time = 0
                                                         }
+                                                        saveSelectedTimer()
                                                     }
                                                 ))
                                                 .toggleStyle(SwitchToggleStyle(tint: .blue))
@@ -94,11 +99,6 @@ struct TimerView: View {
       } else {
           selectedTimerIndex = nil
       }
-    }
-    
-    // 戻るボタンが押されたときに実行される関数
-    private func onBackButtonPressed() {
-        saveSelectedTimer()
     }
     
     private func initTimer() {
