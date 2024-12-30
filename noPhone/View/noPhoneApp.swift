@@ -13,9 +13,6 @@ struct noPhoneApp: App {
                        
                 } else if Screen == .stop {
                     StopView(Screen: $Screen)
-                       
-                } else if Screen == .timer {
-                    TimerView(Screen: $Screen)
                         
                 } else if Screen == .recode {
                     RecodeView(Screen: $Screen)

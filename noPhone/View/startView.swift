@@ -12,6 +12,7 @@ struct StartView: View {
     @State private var time: Int = 0
     @State private var timerList: [Int] = []
         
+    @State private var delete:DeleteType = .non
     var body: some View {
         ZStack{
             VStack {
@@ -57,40 +58,37 @@ struct StartView: View {
                         }
                     }
                 }
-//                HStack{
-//                    Spacer()
-//                   
-//                    Button(action: {
-//                        Screen = .timer
-//                        isOn.toggle()
-//                    }) {
-//                        HStack {
-//                            Image(systemName: "timer") // アイコン
-//                                    .resizable()
-//                                    .frame(width: 100, height: 100)
-//                                    .foregroundColor(isOn ? .blue : ButtonColor) // 状態によって色を変更
-//                        }
-//                        
-//                    }
-//                    Spacer()
-//                }
-                
-                
-                
+                            
+                TimerView(showAlert: $showAlert, delete: $delete)
             }
+            
             
             if(setting){
                 SettingView(setting: $setting)
             }
         }
         .alert(isPresented: $showAlert) {
-            Alert(
-                title: Text("エラー"),
-                message: Text("チャンネルIDまたはユーザー名が保存されていません"),
-                dismissButton: .default(Text("OK"),action: {
-                    
-                })
-            )
+            
+            if(delete != .load){
+                Alert(
+                    title: Text("エラー"),
+                    message: Text("チャンネルIDまたはユーザー名が保存されていません"),
+                    dismissButton: .default(Text("OK"),action: {
+                        
+                    })
+                )
+            } else {
+                Alert(
+                    title: Text("削除しますか？"),
+                    message: Text("この操作はやり直せません"),
+                    primaryButton: .destructive(Text("削除")) {
+                        delete = .yes
+                    },
+                    secondaryButton: .cancel(Text("キャンセル")){
+                        delete = .non
+                    }
+                )
+            }
         }
         .onAppear {
             channelid = UserDefaults.standard.string(forKey: "channelid") ?? ""
