@@ -3,6 +3,7 @@ import SwiftUI
 struct StartView: View {
     @Binding var Screen: Screen
     @State private var setting = false
+    @State private var popstart = false
     
     @State private var isOn = true
     
@@ -19,7 +20,7 @@ struct StartView: View {
                 WhatTimer2(timer: time)
                 HStack{
                     Button {
-                        Screen = .stop // 画面遷移のロジック
+                        popstart = true
                     } label: {
                         ZStack{
                             Rectangle()
@@ -66,6 +67,10 @@ struct StartView: View {
             
             if(setting){
                 SettingView(setting: $setting)
+            }
+            
+            if(popstart){
+                POPstartView(popstart: $popstart, Screen: $Screen)
             }
         }
         .alert(isPresented: $showAlert) {
