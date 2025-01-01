@@ -183,13 +183,19 @@ struct StopView : View {
     
     
     private func Report(realtime: Int, close: Bool, inittime: Int) async {
+        
         var Ktime = inittime - realtime
+        print(Ktime)
+        print(inittime)
+        print(realtime)
+
+
         if(Ktime < 0){
             Ktime = realtime
         }
         recode(date: date, realtime: Ktime, settingtime: inittime, close: close)
         let reporter = API()
-        if let message = await reporter.closeAPI(time: time, close: close) {
+        if let message = await reporter.closeAPI(time: Ktime, close: close) {
             popmess = message
             if(close){
                 popmess = message

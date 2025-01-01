@@ -7,5 +7,5 @@ struct recodeModel : Codable, Identifiable{
     let realtime: Int // タイマー名や情報
     let settingtime: Int // タイマー名や情報
     let close:Bool
-    let title:String?
+    let title:String
 }

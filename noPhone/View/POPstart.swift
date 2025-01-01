@@ -36,6 +36,8 @@ struct POPstartView: View {
                             .foregroundColor(.red)
                             .font(.caption)
                     }
+                    Text("履歴")
+                       
                     ForEach(titles, id: \.self) { index in
                         Button(action: {
                             title = index // ボタンを押すと `title` を更新
@@ -94,9 +96,6 @@ struct POPstartView: View {
 
         errorMessage = nil
         popstart = false // ポップアップを閉じる
-        Screen = .stop
-        let reporter = API()
-        await reporter.startAPI()
         // すでに同じタイトルがある場合は削除
         if let index = self.titles.firstIndex(of: title) {
             self.titles.remove(at: index)
@@ -114,6 +113,10 @@ struct POPstartView: View {
         do {
             let data = try JSONEncoder().encode(titles)
             UserDefaults.standard.set(data, forKey: "titlelist")
+            Screen = .stop
+            let reporter = API()
+            await reporter.startAPI()
+            
         } catch {
             print("Failed to encode titles: \(error)")
         }
