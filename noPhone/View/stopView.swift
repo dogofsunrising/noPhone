@@ -183,42 +183,31 @@ struct StopView : View {
     
     
     private func Report(realtime: Int, close: Bool, inittime: Int) async {
-        
         var Ktime = inittime - realtime
-        print(Ktime)
-        print(inittime)
-        print(realtime)
-
-
-        if(Ktime < 0){
+        if Ktime < 0 {
             Ktime = realtime
         }
+        
         recode(date: date, realtime: Ktime, settingtime: inittime, close: close)
-        let reporter = API()
-        if let message = await reporter.closeAPI(time: Ktime, close: close) {
-            popmess = message
-            if(close){
-                popmess = message
-                AlertType = .finish
-            } else{
-                popmess = message
-                AlertType = .miss
+        
+        Task.detached {
+            let reporter = API()
+            if let message = await reporter.closeAPI(time: Ktime, close: close) {
+                await MainActor.run {
+                    self.popmess = message
+                    self.AlertType = close ? .finish : .miss
+                    self.Moniter = true
+                    self.showAlert = true
+                }
+            } else {
+                await MainActor.run {
+                    self.popmess = close ? "おめでとうございます" : "封印しましょう"
+                    self.AlertType = close ? .finish : .miss
+                    self.Moniter = true
+                    self.showAlert = true
+                }
             }
-            Moniter = true
-            showAlert = true
-        } else {
-            if(close){
-                popmess = "おめでとうございます"
-                AlertType = .finish
-            } else{
-                popmess = "封印しましょう"
-                AlertType = .miss
-            }
-            Moniter = true
-            showAlert = true
         }
-        
-        
     }
     
     
