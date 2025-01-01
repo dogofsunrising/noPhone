@@ -44,11 +44,6 @@ struct RecoListView: View {
                                 
                                 RecoTimer(timer: recodeTimeList[index].realtime, close: recodeTimeList[index].close,on:true)
                                 Spacer()
-                                if recodeTimeList[index].close {
-                                    Text("Success")
-                                } else {
-                                    Text("Failed")
-                                }
                             }
                         }.padding(.vertical, 8)
                             .listRowBackground(recodeTimeList[index].close == true ? ButtonColor : lightPink)
