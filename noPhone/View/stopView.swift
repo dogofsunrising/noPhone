@@ -17,6 +17,7 @@ struct StopView : View {
     @State private var timerActive: Bool = false
     @State private var countup:Bool = false
     @State var timer = Timer.publish(every: 1.0, on: .main, in: .common).autoconnect()
+    @State private var title:String = ""
         
     @State var popmess:String = ""
     
@@ -87,6 +88,7 @@ struct StopView : View {
                 }
             }
             
+            title  = UserDefaults.standard.string(forKey: "title") ?? ""
         }
         .onDisappear {
             timerActive = false // タイマーを停止
@@ -186,8 +188,8 @@ struct StopView : View {
             Ktime = realtime
         }
         recode(date: date, realtime: Ktime, settingtime: inittime, close: close)
-        let reporter = API(time: Ktime, close: close)
-        if let message = await reporter.closeAPI() {
+        let reporter = API()
+        if let message = await reporter.closeAPI(time: time, close: close) {
             popmess = message
             if(close){
                 popmess = message
@@ -239,7 +241,7 @@ struct StopView : View {
         var recodeTimeList = loadRecodeListFromDefaults()
         
         // 新しいデータを作成
-        let newRecode = recodeModel(num: recodeTimeList.count, date: date, realtime: realtime, settingtime: settingtime, close: close)
+        let newRecode = recodeModel(num: recodeTimeList.count, date: date, realtime: realtime, settingtime: settingtime, close: close,title:title)
         
         
         

@@ -4,16 +4,9 @@ import Alamofire
 public final class API {
     private var channelid = UserDefaults.standard.string(forKey: "channelid") ?? ""
     private var name = UserDefaults.standard.string(forKey: "username") ?? ""
-    private var time:Int
-    private var close:Bool
-    
-    
-    public init(time:Int, close:Bool){
-        self.time = time
-        self.close = close
-    }
+    private var title = UserDefaults.standard.string(forKey: "title") ?? ""
 
-    public func closeAPI() async -> String? {
+    public func closeAPI(time:Int,close:Bool) async -> String? {
         // APIのURLを指定
         let urlString = "https://6fqsnu3hec.execute-api.ap-northeast-1.amazonaws.com/kouno/close"
 
@@ -22,7 +15,8 @@ public final class API {
             "channelid": channelid,
             "name": name,
             "close": close,
-            "realtimer_seconds": time
+            "realtimer_seconds": time,
+            "title": title
         ]
 
         return await withCheckedContinuation { continuation in
@@ -54,7 +48,7 @@ public final class API {
     }
 
     
-    public func startAPI(title:String) async {
+    public func startAPI() async {
         // APIのURLを指定
         let urlString = "https://6fqsnu3hec.execute-api.ap-northeast-1.amazonaws.com/kouno/start"
 

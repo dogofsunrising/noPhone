@@ -59,10 +59,9 @@ struct POPstartView: View {
                             if title.isEmpty {
                                 errorMessage = "タイトルを入力してください"
                             } else {
-                                saveTitles()
-                                errorMessage = nil
-                                popstart = false // ポップアップを閉じる
-                                Screen = .stop
+                                Task{
+                                    await saveTitles()
+                                }
                             }
                             
                         }) {
@@ -89,8 +88,15 @@ struct POPstartView: View {
         }
     }
     
-    private func saveTitles() {
+    private func saveTitles() async {
+        // 現在のタイトルを保存（個別保存用）
         UserDefaults.standard.set(title, forKey: "title")
+
+        errorMessage = nil
+        popstart = false // ポップアップを閉じる
+        Screen = .stop
+        let reporter = API()
+        await reporter.startAPI()
         // すでに同じタイトルがある場合は削除
         if let index = self.titles.firstIndex(of: title) {
             self.titles.remove(at: index)
@@ -98,6 +104,11 @@ struct POPstartView: View {
         
         // 新しいタイトルを先頭に追加
         self.titles.insert(title, at: 0)
+        
+        // 履歴を最大5つに制限
+        if self.titles.count > 5 {
+            self.titles.removeLast()
+        }
         
         // 保存処理
         do {
@@ -107,6 +118,7 @@ struct POPstartView: View {
             print("Failed to encode titles: \(error)")
         }
     }
+
 
     
     private func loadTitles() -> [String] {
