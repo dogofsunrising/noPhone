@@ -12,6 +12,7 @@ struct MainTimer: Count {
         self.minutes = (timer % 3600) / 60
         self.seconds = timer % 60
     }
+    
     var body: some View{
         VStack{
             Text(String(format: "%02dh%02dm%02ds", hours, minutes, seconds))
@@ -19,6 +20,5 @@ struct MainTimer: Count {
                 .fontWeight(.bold)
         }
     }
-    
 }
 
