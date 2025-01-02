@@ -17,7 +17,7 @@ struct StartView: View {
     var body: some View {
         ZStack{
             VStack {
-                WhatTimer2(timer: time)
+                MainTimer(timer: time)
                 HStack{
                     Button {
                         popstart = true

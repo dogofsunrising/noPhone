@@ -42,7 +42,7 @@ struct StopView : View {
     var body: some View {
         ZStack{
             VStack {
-                WhatTimer2(timer: time)
+                MainTimer(timer: time)
                     .animation(.easeInOut, value: time)
                 if(countup){
                     Button {

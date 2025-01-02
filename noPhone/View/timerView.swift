@@ -21,7 +21,7 @@ struct TimerView: View {
                                             delete = .load
                                         }) {
                                             HStack {
-                                                WhatTimer(timer: timerList[index])
+                                                SubTimer(timer: timerList[index])
                                                 
                                                 
                                                 
