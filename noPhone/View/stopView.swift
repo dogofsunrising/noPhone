@@ -13,12 +13,10 @@ struct StopView : View {
     @State private var isInBackground = false
     
     @State private var time: Int = 0
-    @State private var time_double = 0.0
     @State private var initimer:Int = 0
     @State private var timerActive: Bool = false
     @State private var countup:Bool = false
     @State var timer = Timer.publish(every: 1.0, on: .main, in: .common).autoconnect()
-    @State var timer_double = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
     @State private var title:String = ""
         
     @State var popmess:String = ""
@@ -45,7 +43,7 @@ struct StopView : View {
         ZStack{
             VStack {
                 VStack{
-                    TimersSelect(timer: time, set: initimer, up: countup,time_double : time_double)
+                    TimersSelect(timer: time, set: initimer, up: countup)
                 }
                 if(countup){
                     Button {
@@ -73,7 +71,6 @@ struct StopView : View {
         }
         .onAppear {
             time = UserDefaults.standard.integer(forKey: "selectedTimer")
-            time_double = Double(time)
             initimer = time
             if(time != 0){
                 timerActive = true
@@ -115,14 +112,6 @@ struct StopView : View {
                 if(countup){
                     time += 1
                     await corestart()
-                }
-            }
-        }
-        .onReceive(timer_double) { _ in
-            Task{
-                time_double -= 0.1
-                if(countup){
-                    time_double += 0.1
                 }
             }
         }

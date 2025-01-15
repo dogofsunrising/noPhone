@@ -6,20 +6,20 @@ struct circleTimer: Count {
     var hours:Int
     var minutes:Int
     var seconds:Int
-    var CGTimer:CGFloat = 0
+    var CGTimer:CGFloat = 1
     init(timer: Int) {
         self.timer = timer
         self.hours = timer / 3600
         self.minutes = (timer % 3600) / 60
         self.seconds = timer % 60
     }
-    init(timer: Int, settime: Int, time_double:Double) {
+    init(timer: Int, settime: Int) {
         self.init(timer: timer) // 必要なプロパティの初期化
 
         // settimeが0の場合は3600に設定
         self.settime = (settime == 0) ? 3600 : settime
         self.timer = timer
-        self.CGTimer = time_double / CGFloat(self.settime)
+        self.CGTimer = CGFloat(self.timer-1) / CGFloat(self.settime)
     }
 
     var body: some View{
@@ -30,7 +30,7 @@ struct circleTimer: Count {
                 .frame(width: 250, height: 250)
                 .foregroundColor(.blue)
                 .rotationEffect(Angle(degrees: 270.0))
-                .animation(.easeInOut(duration: 1), value: CGTimer)
+                .animation(.easeInOut(duration: 1.5), value: CGTimer)
             Text(String(format: "%02dh%02dm%02ds", hours, minutes, seconds))
                 .font(.title2)
                 .fontWeight(.bold)
