@@ -53,11 +53,17 @@ struct SettingView: View {
                                 .padding(.horizontal, 20)
                         }
                     }
-                    
-                    Picker("タイマー画面の設定", selection: $selectedtimer) {
-                        Text("default").tag(TimerType.default)
-                        Text("circle").tag(TimerType.circle)
+                    HStack{
+                        Text("タイマーカスタム")
+                        Picker("タイマー画面の設定", selection: $selectedtimer) {
+                            Text("default").tag(TimerType.default)
+                            Text("circle").tag(TimerType.circle)
+                        }
+                        .pickerStyle(.menu)
                     }
+                    .padding()
+                    .background(Color(red: 0, green: 0, blue: 0, opacity: 0.1))
+                    .cornerRadius(5)
                     
                     // エラーメッセージを表示
                     if let errorMessage = errorMessage {
