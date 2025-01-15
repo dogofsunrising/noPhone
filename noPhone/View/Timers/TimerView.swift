@@ -12,7 +12,7 @@ struct TimersSelect: View {
     }
     var body: some View{
         VStack{
-            circleTimer(timer: timer,settime: set)
+            circleTimer(timer: timer,settime: set,up: up)
                
         }
     }

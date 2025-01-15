@@ -166,6 +166,8 @@ struct StopView : View {
                             if(Moniter){
                                 Moniter = false
                                 countup = false
+                                timerActive = false
+                                showAlert = false
                                 await Report(realtime: time, close: true, inittime: initimer)
                             }
                             
@@ -183,13 +185,13 @@ struct StopView : View {
     
     
     private func Report(realtime: Int, close: Bool, inittime: Int) async {
+        
         var Ktime = inittime - realtime
         if Ktime < 0 {
             Ktime = realtime
         }
         
         recode(date: date, realtime: Ktime, settingtime: inittime, close: close)
-        
         Task.detached {
             let reporter = API()
             if let message = await reporter.test_closeAPI(time: Ktime, close: close) {

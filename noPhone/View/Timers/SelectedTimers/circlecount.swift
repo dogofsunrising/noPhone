@@ -7,13 +7,14 @@ struct circleTimer: Count {
     var minutes:Int
     var seconds:Int
     var CGTimer:CGFloat = 1
+    var up:Bool = false
     init(timer: Int) {
         self.timer = timer
         self.hours = timer / 3600
         self.minutes = (timer % 3600) / 60
         self.seconds = timer % 60
     }
-    init(timer: Int, settime: Int) {
+    init(timer: Int, settime: Int,up:Bool) {
         self.init(timer: timer) // 必要なプロパティの初期化
 
         // settimeが0の場合は3600に設定
@@ -24,6 +25,15 @@ struct circleTimer: Count {
 
     var body: some View{
         ZStack{
+            Circle()
+                .trim(from: 0, to: 1)
+                .stroke(lineWidth: 20.0)
+                .frame(width: 250, height: 250)
+                .foregroundColor(.gray)
+                .rotationEffect(Angle(degrees: 270.0))
+            if(up){
+                
+            }
             Circle()
                 .trim(from: 0, to: CGTimer)
                 .stroke(lineWidth: 20.0)
