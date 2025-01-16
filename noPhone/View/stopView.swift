@@ -42,6 +42,7 @@ struct StopView : View {
     var body: some View {
         ZStack{
             VStack {
+                Spacer()
                 VStack{
                     TimersSelect(timer: time, set: initimer, up: countup)
                 }
@@ -62,6 +63,8 @@ struct StopView : View {
                         }
                     }
                 }
+                Spacer()
+                BannerContentView(navigationTitle: "Banner")
             }
             if(!Moniter){
                 Color.black.opacity(0.4)
