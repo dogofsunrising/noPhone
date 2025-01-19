@@ -100,7 +100,9 @@ struct StopView : View {
         .onReceive(timer) { _ in
             Task{
                 if(timerActive){
-                    time -= 1
+                    withAnimation {
+                        time -= 1
+                    }
                     await corestart()
                     if(time == 0){
                         musicplayer.playMusic()
@@ -113,7 +115,10 @@ struct StopView : View {
                     }
                 }
                 if(countup){
-                    time += 1
+                    withAnimation {
+                        time += 1
+                    }
+                    
                     await corestart()
                 }
             }

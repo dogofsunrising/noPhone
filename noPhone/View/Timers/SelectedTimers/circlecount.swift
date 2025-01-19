@@ -63,6 +63,9 @@ struct circleTimer: Count {
             }
             
             Text(String(format: "%02dh%02dm%02ds", hours, minutes, seconds))
+                .contentTransition(.numericText(value: Double(hours)))
+                .contentTransition(.numericText(value: Double(minutes)))
+                .contentTransition(.numericText(value: Double(seconds)))
                 .font(.title2)
                 .fontWeight(.bold)
         }
