@@ -4,7 +4,10 @@ import CoreMotion
 struct StopView : View {
     @Environment(\.scenePhase) private var scenePhase
     
+    @ObservedObject var interstitial = Interstitial()
+    
     @Binding var Screen: Screen
+    @Binding var Ad:Bool
     
     @State var Moniter: Bool = true
     
@@ -72,6 +75,10 @@ struct StopView : View {
                 LoadingAlert()
             }
         }
+        .onAppear() {
+            interstitial.loadInterstitial()
+        }
+        .disabled(!interstitial.interstitialAdLoaded)
         .onAppear {
             time = UserDefaults.standard.integer(forKey: "selectedTimer")
             initimer = time
@@ -152,6 +159,7 @@ struct StopView : View {
                     title: Text("終了します"),
                     message: Text(popmess),
                     dismissButton: .default(Text("OK"),action: {
+                        interstitial.presentInterstitial()
                         Screen = .start
                     })
                 )
