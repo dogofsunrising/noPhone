@@ -27,7 +27,9 @@ class Interstitial: NSObject, GADFullScreenContentDelegate, ObservableObject {
 
     // インタースティシャル広告の表示
     func presentInterstitial() {
-        let root = UIApplication.shared.windows.first?.rootViewController
+        let scenes = UIApplication.shared.connectedScenes
+        let windowScene = scenes.first as? UIWindowScene
+        let root = windowScene?.windows.first?.rootViewController
         if let ad = interstitialAd {
             ad.present(fromRootViewController: root!)
             self.interstitialAdLoaded = false
