@@ -3,6 +3,7 @@ import CoreMotion
 
 struct StopView : View {
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.colorScheme) var colorScheme
     
     @ObservedObject var interstitial = Interstitial()
     
@@ -58,7 +59,7 @@ struct StopView : View {
                     } label: {
                         ZStack{
                             Rectangle()
-                                .foregroundColor(ButtonColor)
+                                .foregroundColor(ButtonColor(how: .button, scheme: colorScheme))
                                 .frame(width: 200, height: 70)
                                 .cornerRadius(20)
                             Text("Stop")

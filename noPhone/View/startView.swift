@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct StartView: View {
+    @Environment(\.colorScheme) var colorScheme
+    
     @Binding var Screen: Screen
     @State private var setting = false
     @State private var popstart = false
@@ -24,7 +26,7 @@ struct StartView: View {
                     } label: {
                         ZStack{
                             Rectangle()
-                                .foregroundColor(ButtonColor)
+                                .foregroundColor(ButtonColor(how: .button, scheme: colorScheme))
                                 .frame(width: 250, height: 150)
                                 .cornerRadius(20)
                             Text("Start")
@@ -40,7 +42,7 @@ struct StartView: View {
                                 Image(systemName: "gear") // 歯車アイコン
                                     .resizable() // サイズを変更可能にする
                                     .frame(width: 50, height: 50) // 幅と高さを指定
-                                    .foregroundColor(ButtonColor) // アイコンの色を白に設定
+                                    .foregroundColor(ButtonColor(how: .button, scheme: colorScheme)) // アイコンの色を白に設定
                             }
                             
                         }
@@ -50,7 +52,7 @@ struct StartView: View {
                         } label: {
                             ZStack{
                                 Rectangle()
-                                    .foregroundColor(ButtonColor)
+                                    .foregroundColor(ButtonColor(how: .button, scheme: colorScheme))
                                     .frame(width: 50, height: 100)
                                     .cornerRadius(20)
                                 Text("記録")

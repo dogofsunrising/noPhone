@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct RecoListView: View {
+    @Environment(\.colorScheme) var colorScheme
+    
     @State private var recodeTimeList: [recodeModel]
     @Binding var graph:Bool
     init(recodeTimeList: [recodeModel], graph: Binding<Bool>) {
@@ -46,7 +48,7 @@ struct RecoListView: View {
                                 Spacer()
                             }
                         }.padding(.vertical, 8)
-                            .listRowBackground(recodeTimeList[index].close == true ? ButtonColor : lightPink)
+                            .listRowBackground(recodeTimeList[index].close == true ? ButtonColor(how: .button, scheme: colorScheme) : lightPink)
                     }
                 }
             }

@@ -7,6 +7,7 @@ var lightBlue = Color(hex: "B0E2FF")
 var lightPink = Color(hex: "ffc0cb")
 
 extension Color {
+    
     init(hex: String) {
         let scanner = Scanner(string: hex)
         scanner.charactersToBeSkipped = CharacterSet(charactersIn: "#")
@@ -21,7 +22,21 @@ extension Color {
         self.init(.sRGB, red: red, green: green, blue: blue, opacity: 1.0)
     }
 }
+enum HowColor {
+    case button
+    case text
+    
+}
 
-var ButtonColor = Color(hex: "e0ffff")
+func ButtonColor(how:HowColor, scheme: ColorScheme) -> Color {
+    switch how {
+    case .button:
+        return scheme == .dark ? Color(hex: "00bfff") : Color(hex: "e0ffff")
+    case .text:
+        return Color(hex: "003366")
+    }
+    
+}
+
 
 

@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct TimerView: View {
+    @Environment(\.colorScheme) var colorScheme
+    
     @State var timerList: [Int] = [] // Int型のリスト
     @State private var selectedTimerIndex: Int? = nil // 選択されているタイマーのインデックス
     @State private var showAddTimerSheet: Bool = false
@@ -46,7 +48,7 @@ struct TimerView: View {
                                             }
                                             .padding(.vertical, 10)
                                         }
-                                    }.listRowBackground(ButtonColor)
+                                    }.listRowBackground(ButtonColor(how: .button, scheme: colorScheme))
                                 
                             }
                             HStack{
@@ -59,7 +61,7 @@ struct TimerView: View {
                                         .frame(width: 30, height: 30) // 幅と高さを指定
                                 }
                                 Spacer()
-                            }.listRowBackground(ButtonColor)
+                            }.listRowBackground(ButtonColor(how: .button, scheme: colorScheme))
                         }
                         .scrollIndicators(.hidden)
                 }
