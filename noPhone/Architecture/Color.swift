@@ -25,15 +25,18 @@ extension Color {
 enum HowColor {
     case button
     case text
+    case `default`
     
 }
 
 func ButtonColor(how:HowColor, scheme: ColorScheme) -> Color {
     switch how {
     case .button:
-        return scheme == .dark ? Color(hex: "00bfff") : Color(hex: "e0ffff")
+        return scheme == .dark ? Color(hex: "000080") : Color(hex: "e0ffff") // dark : light
     case .text:
-        return Color(hex: "003366")
+        return scheme == .dark ? Color(hex: "e0ffff") : Color(hex: "1E90FF")
+    case .default:
+        return scheme == .dark ? Color(hex: "ffffff") : Color(hex: "000000")
     }
     
 }

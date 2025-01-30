@@ -31,7 +31,7 @@ struct StartView: View {
                                 .cornerRadius(20)
                             Text("Start")
                                 .font(.system(size: 40, weight: .bold))
-                                .foregroundColor(darkBlue)
+                                .foregroundColor(ButtonColor(how: .text, scheme: colorScheme))
                         }
                     }
                     VStack{
@@ -56,7 +56,7 @@ struct StartView: View {
                                     .frame(width: 50, height: 100)
                                     .cornerRadius(20)
                                 Text("記録")
-                                    .foregroundColor(darkBlue)
+                                    .foregroundColor(ButtonColor(how: .text, scheme: colorScheme))
                             }
                         }
                     }

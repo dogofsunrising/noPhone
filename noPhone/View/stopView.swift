@@ -63,7 +63,7 @@ struct StopView : View {
                                 .frame(width: 200, height: 70)
                                 .cornerRadius(20)
                             Text("Stop")
-                                .foregroundColor(darkBlue)
+                                .foregroundColor(ButtonColor(how: .text, scheme: colorScheme))
                         }
                     }
                 }

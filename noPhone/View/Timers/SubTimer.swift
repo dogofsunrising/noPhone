@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct SubTimer: Count {
+    @Environment(\.colorScheme) var colorScheme
     var timer:Int
     var hours:Int = 0
     var minutes:Int = 0
@@ -14,6 +15,7 @@ struct SubTimer: Count {
     var body: some View{
         VStack{
             Text(String(format: "%02dh%02dm%02ds", hours, minutes, seconds))
+                .foregroundColor(ButtonColor(how: .default, scheme: colorScheme))
                 .font(.title2)
                 .fontWeight(.bold)
         }

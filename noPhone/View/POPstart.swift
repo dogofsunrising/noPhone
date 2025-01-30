@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct POPstartView: View {
+    @Environment(\.colorScheme) var colorScheme
     @Binding var popstart: Bool // ポップアップを表示するかどうかの状態
     @Binding var Screen:Screen
     @State private var title:String = ""
@@ -37,13 +38,15 @@ struct POPstartView: View {
                             .font(.caption)
                     }
                     Text("履歴")
+                        .font(.subheadline)
                        
                     ForEach(titles, id: \.self) { index in
                         Button(action: {
                             title = index // ボタンを押すと `title` を更新
                         }, label: {
                             Text(index)
-                                .font(.largeTitle)
+                                .font(.title2)
+                                .foregroundColor(ButtonColor(how: .text, scheme: colorScheme))
                         })
                     }
                     HStack{
@@ -52,7 +55,7 @@ struct POPstartView: View {
                             popstart = false
                         }) {
                             Text("キャンセル")
-                                .foregroundColor(.blue)
+                                .foregroundColor(ButtonColor(how: .text, scheme: colorScheme))
                                 .padding(.top, 10)
                         }
                         Spacer()
@@ -68,7 +71,7 @@ struct POPstartView: View {
                             
                         }) {
                             Text("始める")
-                                .foregroundColor(.blue)
+                                .foregroundColor(ButtonColor(how: .text, scheme: colorScheme))
                                 .padding(.top, 10)
                         }
                     }
