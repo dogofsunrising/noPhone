@@ -14,57 +14,72 @@ struct TimerView: View {
     var body: some View {
             ZStack{
                 VStack {
-                        List{
-                            ForEach(timerList.indices, id: \.self) { index in
-                                    VStack{
-                                        Button(action: {
-                                            pendingIndex = index
-                                            showAlert = true
-                                            delete = .load
-                                        }) {
-                                            HStack {
-                                                SubTimer(timer: timerList[index])
-                                                
-                                                
-                                                
-                                                
-                                                Toggle("", isOn: Binding(
-                                                    get: {
-                                                        selectedTimerIndex == index
-                                                    },
-                                                    set: { isOn in
-                                                        if isOn {
-                                                            selectedTimerIndex = index
-                                                            time = timerList[index]
-                                                            
-                                                        } else {
-                                                            selectedTimerIndex = nil
-                                                            time = 0
-                                                        }
-                                                        saveSelectedTimer()
+                    List{
+                        ForEach(timerList.indices, id: \.self) { index in
+                            Section {
+                                VStack{
+                                    Button(action: {
+                                        pendingIndex = index
+                                        showAlert = true
+                                        delete = .load
+                                    }) {
+                                        HStack {
+                                            SubTimer(timer: timerList[index], screenHeight: UIScreen.main.bounds.height)
+                                            
+                                            
+                                            
+                                            
+                                            Toggle("", isOn: Binding(
+                                                get: {
+                                                    selectedTimerIndex == index
+                                                },
+                                                set: { isOn in
+                                                    if isOn {
+                                                        selectedTimerIndex = index
+                                                        time = timerList[index]
+                                                        
+                                                    } else {
+                                                        selectedTimerIndex = nil
+                                                        time = 0
                                                     }
-                                                ))
-                                                .toggleStyle(SwitchToggleStyle(tint: .blue))
-                                            }
-                                            .padding(.vertical, 10)
+                                                    saveSelectedTimer()
+                                                }
+                                            ))
+                                            .toggleStyle(SwitchToggleStyle(tint: .blue))
                                         }
-                                    }.listRowBackground(ButtonColor(how: .button, scheme: colorScheme))
-                                
-                            }
-                            HStack{
-                                Spacer()
-                                Button(action: {
-                                    showAddTimerSheet = true
-                                }) {
-                                    Image(systemName: "plus") // 歯車アイコン
-                                        .resizable() // サイズを変更可能にする
-                                        .frame(width: 30, height: 30) // 幅と高さを指定
+                                        .padding(.vertical, 7)
+                                    }
                                 }
-                                Spacer()
-                            }.listRowBackground(ButtonColor(how: .button, scheme: colorScheme))
+                                .listRowBackground(ButtonColor(how: .button, scheme: colorScheme))
+                                .listRowSeparatorTint(ButtonColor(how: .text, scheme: colorScheme))
+                            }
+                            
+                            
                         }
-                        .scrollIndicators(.hidden)
+                        HStack{
+                            Spacer()
+                            Button(action: {
+                                showAddTimerSheet = true
+                            }) {
+                                Image(systemName: "plus") // 歯車アイコン
+                                    .resizable() // サイズを変更可能にする
+                                    .frame(width: 30, height: 30) // 幅と高さを指定
+                            }
+                            Spacer()
+                        }.listRowBackground(ButtonColor(how: .button, scheme: colorScheme))
+                    }
+                    .shadow(color: .black.opacity(0.2), radius: 10, x: 0, y: 5)
+                    .listSectionSpacing(5)
+                    .scrollIndicators(.hidden)
                 }
+                VStack {
+                        Spacer()
+                        Rectangle()
+                            .fill(Color.black.opacity(0.2))
+                            .frame(height: 50)
+                            .blur(radius: 10)
+                            .offset(y: 10) // 影を少し下にずらす
+                    }
                 .onChange(of: delete) {
                     Task{
                         if(delete == .yes){

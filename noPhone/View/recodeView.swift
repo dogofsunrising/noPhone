@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct RecodeView: View {
+    @Environment(\.colorScheme) var colorScheme
     @Binding var Screen: Screen
     @State private var recodeTimeList: [recodeModel] = []
     
@@ -27,7 +28,12 @@ struct RecodeView: View {
             })
             .navigationBarTitle("記録", displayMode: .inline)
             .navigationBarItems(
-                leading: Button("戻る", action: onBackButtonPressed),
+                leading: Button(action: {
+                    onBackButtonPressed()
+                }) {
+                    Text("戻る")
+                        .foregroundStyle(ButtonColor(how: .text, scheme: colorScheme))
+                },
                 trailing: Button(action: {
                     withAnimation {
                         graph.toggle()
@@ -35,8 +41,10 @@ struct RecodeView: View {
                 }) {
                     if graph {
                         Text("グラフを閉じる")
+                            .foregroundStyle(ButtonColor(how: .text, scheme: colorScheme))
                     } else {
                         Text("グラフを表示")
+                            .foregroundStyle(ButtonColor(how: .text, scheme: colorScheme))
                     }
                 }
             )
