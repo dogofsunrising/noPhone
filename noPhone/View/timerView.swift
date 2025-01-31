@@ -1,56 +1,93 @@
 import SwiftUI
 
 struct TimerView: View {
-    @Binding var Screen: Screen
+    @Environment(\.colorScheme) var colorScheme
+    
     @State var timerList: [Int] = [] // Int型のリスト
     @State private var selectedTimerIndex: Int? = nil // 選択されているタイマーのインデックス
     @State private var showAddTimerSheet: Bool = false
     
-    @State private var showAlert: Bool = false
+    @Binding var showAlert: Bool
+    @Binding var delete: DeleteType
+    @Binding var time:Int
     @State private var pendingIndex: Int? = nil
     var body: some View {
-        NavigationView {
             ZStack{
                 VStack {
-                    if timerList.isEmpty {
-                        Text("タイマーリストが空です")
-                            .foregroundColor(.gray)
-                            .padding()
-                    } else {
-                        List{
-                            ForEach(timerList.indices, id: \.self) { index in
-                                    VStack{
-                                        Button(action: {
-                                            pendingIndex = index
-                                            showAlert = true
-                                        }) {
-                                            HStack {
-                                                WhatTimer(timer: timerList[index])
-                                                
-                                                
-                                                
-                                                
-                                                Toggle("", isOn: Binding(
-                                                    get: {
-                                                        selectedTimerIndex == index
-                                                    },
-                                                    set: { isOn in
-                                                        if isOn {
-                                                            selectedTimerIndex = index
-                                                        } else {
-                                                            selectedTimerIndex = nil
-                                                        }
+                    List{
+                        ForEach(timerList.indices, id: \.self) { index in
+                            Section {
+                                VStack{
+                                    Button(action: {
+                                        pendingIndex = index
+                                        showAlert = true
+                                        delete = .load
+                                    }) {
+                                        HStack {
+                                            SubTimer(timer: timerList[index], screenHeight: UIScreen.main.bounds.height)
+                                            
+                                            
+                                            
+                                            
+                                            Toggle("", isOn: Binding(
+                                                get: {
+                                                    selectedTimerIndex == index
+                                                },
+                                                set: { isOn in
+                                                    if isOn {
+                                                        selectedTimerIndex = index
+                                                        time = timerList[index]
+                                                        
+                                                    } else {
+                                                        selectedTimerIndex = nil
+                                                        time = 0
                                                     }
-                                                ))
-                                                .toggleStyle(SwitchToggleStyle(tint: .blue))
-                                            }
-                                            .padding(.vertical, 10)
+                                                    saveSelectedTimer()
+                                                }
+                                            ))
+                                            .toggleStyle(SwitchToggleStyle(tint: .blue))
                                         }
-                                    }.listRowBackground(ButtonColor)
-                                
+                                        .padding(.vertical, 7)
+                                    }
+                                }
+                                .listRowBackground(ButtonColor(how: .button, scheme: colorScheme))
+                                .listRowSeparatorTint(ButtonColor(how: .text, scheme: colorScheme))
                             }
+                            
+                            
                         }
-                        .scrollIndicators(.hidden)
+                        HStack{
+                            Spacer()
+                            Button(action: {
+                                showAddTimerSheet = true
+                            }) {
+                                Image(systemName: "plus") // 歯車アイコン
+                                    .resizable() // サイズを変更可能にする
+                                    .frame(width: 30, height: 30) // 幅と高さを指定
+                            }
+                            Spacer()
+                        }.listRowBackground(ButtonColor(how: .button, scheme: colorScheme))
+                    }
+                    .shadow(color: .black.opacity(0.2), radius: 10, x: 0, y: 5)
+                    .listSectionSpacing(5)
+                    .scrollIndicators(.hidden)
+                }
+                VStack {
+                        Spacer()
+                        Rectangle()
+                            .fill(Color.black.opacity(0.2))
+                            .frame(height: 50)
+                            .blur(radius: 10)
+                            .offset(y: 10) // 影を少し下にずらす
+                    }
+                .onChange(of: delete) {
+                    Task{
+                        if(delete == .yes){
+                            if let index = pendingIndex { // 削除予定のインデックスを確認
+                                removeTimer(at: index)
+                            }
+                            delete = .non
+                        }
                     }
                 }
                 .onAppear {
@@ -59,47 +96,16 @@ struct TimerView: View {
                 }
             }
             .scrollContentBackground(.hidden)
-            .background(GradientBackgroundView())
-            .navigationBarTitle("タイマー選択", displayMode: .inline)
-            .navigationBarItems(
-                leading: Button(action: {
-                    onBackButtonPressed()
-                }) {
-                    Text("戻る")
-                        .foregroundColor(.blue)
-                },
-                trailing: Button(action: {
-                    showAddTimerSheet = true
-                }) {
-                    Image(systemName: "plus")
-                        .foregroundColor(.blue)
-                }
-            )
+            .background(.opacity(0))
             .sheet(isPresented: $showAddTimerSheet) {
                 AddTimerView(isPresented: $showAddTimerSheet, timerList: $timerList)
             }
-            .alert(isPresented: $showAlert) {
-                Alert(
-                    title: Text("削除しますか？"),
-                    message: Text("この操作はやり直せません"),
-                    primaryButton: .destructive(Text("削除")) {
-                        Task{
-                            if let index = pendingIndex { // 削除予定のインデックスを確認
-                                removeTimer(at: index)
-                            }
-                        }
-                    },
-                    secondaryButton: .cancel(Text("キャンセル"))
-                )
-            }
-        }
     }
 
     // 選択されたタイマーを保存する関数
     private func saveSelectedTimer() {
         let selectedTimer = selectedTimerIndex != nil ? timerList[selectedTimerIndex!] : 0
         UserDefaults.standard.set(selectedTimer, forKey: "selectedTimer")
-        Screen = .start
     }
 
     // 保存されたタイマーをロードする関数
@@ -110,12 +116,6 @@ struct TimerView: View {
       } else {
           selectedTimerIndex = nil
       }
-    }
-    
-    // 戻るボタンが押されたときに実行される関数
-    private func onBackButtonPressed() {
-        Screen = .start
-        saveSelectedTimer()
     }
     
     private func initTimer() {

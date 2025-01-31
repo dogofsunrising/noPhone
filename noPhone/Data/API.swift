@@ -2,29 +2,22 @@ import Foundation
 import Alamofire
 
 public final class API {
-    let urlString = "https://6fqsnu3hec.execute-api.ap-northeast-1.amazonaws.com/kouno"
-    private var channelid:String
-    private var name:String
-    private var time:Int
-    private var close:Bool
-    
-    public init(channelid:String ,name:String, time:Int, close:Bool){
-        self.channelid = channelid
-        self.name = name
-        self.time = time
-        self.close = close
-    }
+    private var channelid = UserDefaults.standard.string(forKey: "channelid") ?? ""
+    private var name = UserDefaults.standard.string(forKey: "username") ?? ""
+    private var title = UserDefaults.standard.string(forKey: "title") ?? ""
 
-    public func postAPI() async -> String? {
+//    public func test_closeAPI(time:Int,close:Bool) async -> String?{ return "test11111"}
+    public func closeAPI(time:Int,close:Bool) async -> String? {
         // APIのURLを指定
-        let urlString = "https://6fqsnu3hec.execute-api.ap-northeast-1.amazonaws.com/kouno"
+        let urlString = "https://6fqsnu3hec.execute-api.ap-northeast-1.amazonaws.com/kouno/close"
 
         // 送信するJSONデータを作成
         let jsonData: [String: Any] = [
             "channelid": channelid,
             "name": name,
             "close": close,
-            "realtimer_seconds": time
+            "realtimer_seconds": time,
+            "title": title
         ]
 
         return await withCheckedContinuation { continuation in
@@ -55,4 +48,40 @@ public final class API {
         }
     }
 
+    
+//    public func test_startAPI() {}
+    public func startAPI() async {
+        // APIのURLを指定
+        let urlString = "https://6fqsnu3hec.execute-api.ap-northeast-1.amazonaws.com/kouno/start"
+
+        // 送信するJSONデータを作成
+        let jsonData: [String: Any] = [
+            "channelid": channelid,
+            "name": name,
+            "title":title
+        ]
+
+        return await withCheckedContinuation { continuation in
+            // Alamofireを使用してPOSTリクエストを送信
+            AF.request(urlString, method: .post, parameters: jsonData, encoding: JSONEncoding.default, headers: ["Content-Type": "application/json"])
+                .responseData { response in
+                    switch response.result {
+                    case .success(let data):
+                        do {
+                            // レスポンスデータをJSONとしてデコード
+                            if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+                               let message = json["message"] as? String {
+                                print("API Message: \(message)")
+                            } else {
+                                print("Message key not found in response.")
+                            }
+                        } catch {
+                            print("JSON decoding error: \(error.localizedDescription)")
+                        }
+                    case .failure(let error):
+                        print("Error: \(error.localizedDescription)")
+                    }
+                }
+        }
+    }
 }

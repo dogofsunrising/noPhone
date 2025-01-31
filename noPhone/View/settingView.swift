@@ -4,6 +4,7 @@ struct SettingView: View {
     @Binding var setting: Bool // ポップアップを表示するかどうかの状態
     @State private var channelid: String = UserDefaults.standard.string(forKey: "channelid") ?? ""
     @State private var username: String = UserDefaults.standard.string(forKey: "username") ?? ""
+    @State private var selectedtimer: TimerType = TimerType(rawValue: UserDefaults.standard.string(forKey: "timertype") ?? "") ?? .default
     @State private var errorMessage: String? = nil // エラーメッセージ
     
     var body: some View {
@@ -17,6 +18,7 @@ struct SettingView: View {
                     } else {
                         UserDefaults.standard.set(channelid, forKey: "channelid")
                         UserDefaults.standard.set(username, forKey: "username")
+                        UserDefaults.standard.set(selectedtimer.rawValue, forKey: "timertype")
                         errorMessage = nil
                         setting = false // ポップアップを閉じる
                     }
@@ -51,6 +53,17 @@ struct SettingView: View {
                                 .padding(.horizontal, 20)
                         }
                     }
+                    HStack{
+                        Text("タイマーカスタム")
+                        Picker("タイマー画面の設定", selection: $selectedtimer) {
+                            Text("default").tag(TimerType.default)
+                            Text("circle").tag(TimerType.circle)
+                        }
+                        .pickerStyle(.menu)
+                    }
+                    .padding()
+                    .background(Color(red: 0, green: 0, blue: 0, opacity: 0.1))
+                    .cornerRadius(5)
                     
                     // エラーメッセージを表示
                     if let errorMessage = errorMessage {
@@ -65,6 +78,7 @@ struct SettingView: View {
                         } else {
                             UserDefaults.standard.set(channelid, forKey: "channelid")
                             UserDefaults.standard.set(username, forKey: "username")
+                            UserDefaults.standard.set(selectedtimer.rawValue, forKey: "timertype")
                             errorMessage = nil
                             setting = false // ポップアップを閉じる
                         }

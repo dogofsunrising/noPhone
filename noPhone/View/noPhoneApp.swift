@@ -2,8 +2,9 @@ import SwiftUI
 
 @main
 struct noPhoneApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @State var Screen:Screen = .start
-    @State private var showView: Bool = true // フェードアウト制御用
+    @State private var Ad: Bool = false
     var body: some Scene {
         WindowGroup {
             ZStack {
@@ -12,10 +13,7 @@ struct noPhoneApp: App {
                     StartView(Screen: $Screen)
                        
                 } else if Screen == .stop {
-                    StopView(Screen: $Screen)
-                       
-                } else if Screen == .timer {
-                    TimerView(Screen: $Screen)
+                    StopView(Screen: $Screen, Ad: $Ad)
                         
                 } else if Screen == .recode {
                     RecodeView(Screen: $Screen)

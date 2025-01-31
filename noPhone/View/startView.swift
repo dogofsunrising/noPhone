@@ -1,8 +1,11 @@
 import SwiftUI
 
 struct StartView: View {
+    @Environment(\.colorScheme) var colorScheme
+    
     @Binding var Screen: Screen
     @State private var setting = false
+    @State private var popstart = false
     
     @State private var isOn = true
     
@@ -12,22 +15,23 @@ struct StartView: View {
     @State private var time: Int = 0
     @State private var timerList: [Int] = []
         
+    @State private var delete:DeleteType = .non
     var body: some View {
         ZStack{
             VStack {
-                WhatTimer2(timer: time)
+                MainTimer(timer: time)
                 HStack{
                     Button {
-                        Screen = .stop // 画面遷移のロジック
+                        popstart = true
                     } label: {
                         ZStack{
                             Rectangle()
-                                .foregroundColor(ButtonColor)
+                                .foregroundColor(ButtonColor(how: .button, scheme: colorScheme))
                                 .frame(width: 250, height: 150)
                                 .cornerRadius(20)
                             Text("Start")
                                 .font(.system(size: 40, weight: .bold))
-                                .foregroundColor(darkBlue)
+                                .foregroundColor(ButtonColor(how: .text, scheme: colorScheme))
                         }
                     }
                     VStack{
@@ -38,7 +42,7 @@ struct StartView: View {
                                 Image(systemName: "gear") // 歯車アイコン
                                     .resizable() // サイズを変更可能にする
                                     .frame(width: 50, height: 50) // 幅と高さを指定
-                                    .foregroundColor(ButtonColor) // アイコンの色を白に設定
+                                    .foregroundColor(ButtonColor(how: .button, scheme: colorScheme)) // アイコンの色を白に設定
                             }
                             
                         }
@@ -48,49 +52,51 @@ struct StartView: View {
                         } label: {
                             ZStack{
                                 Rectangle()
-                                    .foregroundColor(ButtonColor)
+                                    .foregroundColor(ButtonColor(how: .button, scheme: colorScheme))
                                     .frame(width: 50, height: 100)
                                     .cornerRadius(20)
                                 Text("記録")
-                                    .foregroundColor(darkBlue)
+                                    .foregroundColor(ButtonColor(how: .text, scheme: colorScheme))
                             }
                         }
                     }
                 }
-//                HStack{
-//                    Spacer()
-//                   
-//                    Button(action: {
-//                        Screen = .timer
-//                        isOn.toggle()
-//                    }) {
-//                        HStack {
-//                            Image(systemName: "timer") // アイコン
-//                                    .resizable()
-//                                    .frame(width: 100, height: 100)
-//                                    .foregroundColor(isOn ? .blue : ButtonColor) // 状態によって色を変更
-//                        }
-//                        
-//                    }
-//                    Spacer()
-//                }
                 
-                
-                
+                TimerView(showAlert: $showAlert, delete: $delete, time: $time)
+                BannerContentView(navigationTitle: "Banner")
             }
+            
             
             if(setting){
                 SettingView(setting: $setting)
             }
+            
+            if(popstart){
+                POPstartView(popstart: $popstart, Screen: $Screen)
+            }
         }
         .alert(isPresented: $showAlert) {
-            Alert(
-                title: Text("エラー"),
-                message: Text("チャンネルIDまたはユーザー名が保存されていません"),
-                dismissButton: .default(Text("OK"),action: {
-                    
-                })
-            )
+            
+            if(delete != .load){
+                Alert(
+                    title: Text("エラー"),
+                    message: Text("チャンネルIDまたはユーザー名が保存されていません"),
+                    dismissButton: .default(Text("OK"),action: {
+                        
+                    })
+                )
+            } else {
+                Alert(
+                    title: Text("削除しますか？"),
+                    message: Text("この操作はやり直せません"),
+                    primaryButton: .destructive(Text("削除")) {
+                        delete = .yes
+                    },
+                    secondaryButton: .cancel(Text("キャンセル")){
+                        delete = .non
+                    }
+                )
+            }
         }
         .onAppear {
             channelid = UserDefaults.standard.string(forKey: "channelid") ?? ""

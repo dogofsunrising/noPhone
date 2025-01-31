@@ -3,8 +3,12 @@ import CoreMotion
 
 struct StopView : View {
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.colorScheme) var colorScheme
+    
+    @ObservedObject var interstitial = Interstitial()
     
     @Binding var Screen: Screen
+    @Binding var Ad:Bool
     
     @State var Moniter: Bool = true
     
@@ -12,13 +16,12 @@ struct StopView : View {
     @State private var showAlert: Bool = false
     @State private var isInBackground = false
     
-    @State private var channelid: String = ""
-    @State private var username: String = ""
     @State private var time: Int = 0
     @State private var initimer:Int = 0
     @State private var timerActive: Bool = false
     @State private var countup:Bool = false
     @State var timer = Timer.publish(every: 1.0, on: .main, in: .common).autoconnect()
+    @State private var title:String = ""
         
     @State var popmess:String = ""
     
@@ -43,8 +46,10 @@ struct StopView : View {
     var body: some View {
         ZStack{
             VStack {
-                WhatTimer2(timer: time)
-                    .animation(.easeInOut, value: time)
+                Spacer()
+                VStack{
+                    TimersSelect(timer: time, set: initimer, up: countup)
+                }
                 if(countup){
                     Button {
                         Task{
@@ -54,14 +59,16 @@ struct StopView : View {
                     } label: {
                         ZStack{
                             Rectangle()
-                                .foregroundColor(ButtonColor)
+                                .foregroundColor(ButtonColor(how: .button, scheme: colorScheme))
                                 .frame(width: 200, height: 70)
                                 .cornerRadius(20)
                             Text("Stop")
-                                .foregroundColor(darkBlue)
+                                .foregroundColor(ButtonColor(how: .text, scheme: colorScheme))
                         }
                     }
                 }
+                Spacer()
+                BannerContentView(navigationTitle: "Banner")
             }
             if(!Moniter){
                 Color.black.opacity(0.4)
@@ -69,9 +76,11 @@ struct StopView : View {
                 LoadingAlert()
             }
         }
+        .onAppear() {
+            interstitial.loadInterstitial()
+        }
+        .disabled(!interstitial.interstitialAdLoaded)
         .onAppear {
-            channelid = UserDefaults.standard.string(forKey: "channelid") ?? ""
-            username = UserDefaults.standard.string(forKey: "username") ?? ""
             time = UserDefaults.standard.integer(forKey: "selectedTimer")
             initimer = time
             if(time != 0){
@@ -91,6 +100,7 @@ struct StopView : View {
                 }
             }
             
+            title  = UserDefaults.standard.string(forKey: "title") ?? ""
         }
         .onDisappear {
             timerActive = false // タイマーを停止
@@ -98,24 +108,28 @@ struct StopView : View {
         .onReceive(timer) { _ in
             Task{
                 if(timerActive){
-                    time -= 1
+                    withAnimation {
+                        time -= 1
+                    }
                     await corestart()
                     if(time == 0){
                         musicplayer.playMusic()
                         Moniter = false
                         timerActive = false
                         Task{
-                            await Report(channelid: channelid, name: username, realtime: time, close: true,inittime: initimer)
+                            await Report(realtime: time, close: true,inittime: initimer)
                         }
                         
                     }
                 }
                 if(countup){
-                    time += 1
+                    withAnimation {
+                        time += 1
+                    }
+                    
                     await corestart()
                 }
             }
-            
         }
         .onChange(of: scenePhase) {
 //            //フォアグラウンドに戻った時の処理
@@ -135,7 +149,7 @@ struct StopView : View {
                 Moniter = false
                 timerActive = false
                 Task{
-                    await Report(channelid: channelid, name: username, realtime: time, close: false,inittime: initimer)
+                    await Report(realtime: time, close: false,inittime: initimer)
                 }
             }
         }
@@ -146,6 +160,7 @@ struct StopView : View {
                     title: Text("終了します"),
                     message: Text(popmess),
                     dismissButton: .default(Text("OK"),action: {
+                        interstitial.presentInterstitial()
                         Screen = .start
                     })
                 )
@@ -168,7 +183,9 @@ struct StopView : View {
                             if(Moniter){
                                 Moniter = false
                                 countup = false
-                                await Report(channelid: channelid, name: username, realtime: time, close: true, inittime: initimer)
+                                timerActive = false
+                                showAlert = false
+                                await Report(realtime: time, close: true, inittime: initimer)
                             }
                             
                         }
@@ -184,37 +201,32 @@ struct StopView : View {
     }
     
     
-    private func Report(channelid: String, name: String, realtime: Int, close: Bool, inittime: Int) async {
+    private func Report(realtime: Int, close: Bool, inittime: Int) async {
+        
         var Ktime = inittime - realtime
-        if(Ktime < 0){
+        if Ktime < 0 {
             Ktime = realtime
         }
+        
         recode(date: date, realtime: Ktime, settingtime: inittime, close: close)
-        let reporter = API(channelid: channelid, name: name, time: Ktime, close: close)
-        if let message = await reporter.postAPI() {
-            popmess = message
-            if(close){
-                popmess = message
-                AlertType = .finish
-            } else{
-                popmess = message
-                AlertType = .miss
+        Task.detached {
+            let reporter = API()
+            if let message = await reporter.closeAPI(time: Ktime, close: close) {
+                await MainActor.run {
+                    self.popmess = message
+                    self.AlertType = close ? .finish : .miss
+                    self.Moniter = true
+                    self.showAlert = true
+                }
+            } else {
+                await MainActor.run {
+                    self.popmess = close ? "おめでとうございます" : "封印しましょう"
+                    self.AlertType = close ? .finish : .miss
+                    self.Moniter = true
+                    self.showAlert = true
+                }
             }
-            Moniter = true
-            showAlert = true
-        } else {
-            if(close){
-                popmess = "おめでとうございます"
-                AlertType = .finish
-            } else{
-                popmess = "封印しましょう"
-                AlertType = .miss
-            }
-            Moniter = true
-            showAlert = true
         }
-        
-        
     }
     
     
@@ -234,7 +246,7 @@ struct StopView : View {
         if core && Moniter{
             countup = false
             Moniter = false
-            await Report(channelid: channelid, name: username, realtime: time, close: false, inittime: initimer)
+            await Report(realtime: time, close: false, inittime: initimer)
         }
     }
     
@@ -243,7 +255,7 @@ struct StopView : View {
         var recodeTimeList = loadRecodeListFromDefaults()
         
         // 新しいデータを作成
-        let newRecode = recodeModel(num: recodeTimeList.count, date: date, realtime: realtime, settingtime: settingtime, close: close)
+        let newRecode = recodeModel(num: recodeTimeList.count, date: date, realtime: realtime, settingtime: settingtime, close: close,title:title)
         
         
         
