@@ -118,7 +118,7 @@ struct POPstartView: View {
             UserDefaults.standard.set(data, forKey: "titlelist")
             Screen = .stop
             let reporter = API()
-            await reporter.test_startAPI()
+            await reporter.startAPI()
             
         } catch {
             print("Failed to encode titles: \(error)")

@@ -6,7 +6,7 @@ public final class API {
     private var name = UserDefaults.standard.string(forKey: "username") ?? ""
     private var title = UserDefaults.standard.string(forKey: "title") ?? ""
 
-    public func test_closeAPI(time:Int,close:Bool) async -> String?{ return "test11111"}
+//    public func test_closeAPI(time:Int,close:Bool) async -> String?{ return "test11111"}
     public func closeAPI(time:Int,close:Bool) async -> String? {
         // APIのURLを指定
         let urlString = "https://6fqsnu3hec.execute-api.ap-northeast-1.amazonaws.com/kouno/close"
@@ -49,7 +49,7 @@ public final class API {
     }
 
     
-    public func test_startAPI() {}
+//    public func test_startAPI() {}
     public func startAPI() async {
         // APIのURLを指定
         let urlString = "https://6fqsnu3hec.execute-api.ap-northeast-1.amazonaws.com/kouno/start"

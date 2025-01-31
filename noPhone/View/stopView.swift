@@ -211,7 +211,7 @@ struct StopView : View {
         recode(date: date, realtime: Ktime, settingtime: inittime, close: close)
         Task.detached {
             let reporter = API()
-            if let message = await reporter.test_closeAPI(time: Ktime, close: close) {
+            if let message = await reporter.closeAPI(time: Ktime, close: close) {
                 await MainActor.run {
                     self.popmess = message
                     self.AlertType = close ? .finish : .miss
