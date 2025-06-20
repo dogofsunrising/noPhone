@@ -39,10 +39,6 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
-				View/noPhoneApp.swift,
-				View/POPstart.swift,
-				View/RecoTimeList.swift,
-				View/startView.swift,
 				View/Timers/countProtocol.swift,
 				View/Timers/MainTimer.swift,
 				View/Timers/RecoTimer.swift,
