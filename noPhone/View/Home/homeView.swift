@@ -1,10 +1,10 @@
 import SwiftUI
 
-struct StartView: View {
+struct HomeView: View {
     @Environment(\.colorScheme) var colorScheme
     
     @State private var setting = false
-    @State private var popstart = false
+    @State private var popCheck = false
     
     @State private var isOn = true
     
@@ -21,7 +21,7 @@ struct StartView: View {
                 MainTimer(timer: time)
                 HStack{
                     Button {
-                        popstart = true
+                        popCheck = true
                     } label: {
                         ZStack{
                             Rectangle()
@@ -37,10 +37,6 @@ struct StartView: View {
                 
                 TimerView(showAlert: $showAlert, delete: $delete, time: $time)
             }
-            
-//            if(popstart){
-//                POPstartView(popstart: $popstart, Screen: $Screen)
-//            }
         }
         .alert(isPresented: $showAlert) {
             
@@ -70,6 +66,11 @@ struct StartView: View {
             username = UserDefaults.standard.string(forKey: "username") ?? ""
             time = UserDefaults.standard.integer(forKey: "selectedTimer")
             timerList = UserDefaults.standard.array(forKey: "timerList") as? [Int] ?? []
+            if(timerList.isEmpty){
+                let numbers: [Int] = [1800, 3600, 7200, 10800]
+                UserDefaults.standard.set(numbers, forKey: "timerList")
+                timerList = UserDefaults.standard.array(forKey: "timerList") as? [Int] ?? []
+            }
             if channelid.isEmpty || username.isEmpty {
                 showAlert = true
                 setting.toggle()
@@ -81,10 +82,7 @@ struct StartView: View {
                 isOn = false
             }
             
-            if(timerList.isEmpty){
-                let numbers: [Int] = [1800, 3600, 7200, 10800]
-                UserDefaults.standard.set(numbers, forKey: "timerList")
-            }
+            
         }
     }
 }

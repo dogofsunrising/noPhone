@@ -12,7 +12,7 @@ struct noPhoneApp: App {
                 VStack{
 //                    BannerContentView(navigationTitle: "Banner")
                     TabView(selection: $Screen) {
-                        StartView()
+                        HomeView()
                             .tag(0)
                             .tabItem {
                                 Label("Home", systemImage: "lock.fill")
