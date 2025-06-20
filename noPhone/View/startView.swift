@@ -3,7 +3,6 @@ import SwiftUI
 struct StartView: View {
     @Environment(\.colorScheme) var colorScheme
     
-    @Binding var Screen: Screen
     @State private var setting = false
     @State private var popstart = false
     
@@ -34,46 +33,14 @@ struct StartView: View {
                                 .foregroundColor(ButtonColor(how: .text, scheme: colorScheme))
                         }
                     }
-                    VStack{
-                        Button(action: {
-                            setting.toggle()
-                        }) {
-                            HStack {
-                                Image(systemName: "gear") // 歯車アイコン
-                                    .resizable() // サイズを変更可能にする
-                                    .frame(width: 50, height: 50) // 幅と高さを指定
-                                    .foregroundColor(ButtonColor(how: .button, scheme: colorScheme)) // アイコンの色を白に設定
-                            }
-                            
-                        }
-                        
-                        Button {
-                            Screen = .recode
-                        } label: {
-                            ZStack{
-                                Rectangle()
-                                    .foregroundColor(ButtonColor(how: .button, scheme: colorScheme))
-                                    .frame(width: 50, height: 100)
-                                    .cornerRadius(20)
-                                Text("記録")
-                                    .foregroundColor(ButtonColor(how: .text, scheme: colorScheme))
-                            }
-                        }
-                    }
                 }
                 
                 TimerView(showAlert: $showAlert, delete: $delete, time: $time)
-                BannerContentView(navigationTitle: "Banner")
             }
             
-            
-            if(setting){
-                SettingView(setting: $setting)
-            }
-            
-            if(popstart){
-                POPstartView(popstart: $popstart, Screen: $Screen)
-            }
+//            if(popstart){
+//                POPstartView(popstart: $popstart, Screen: $Screen)
+//            }
         }
         .alert(isPresented: $showAlert) {
             

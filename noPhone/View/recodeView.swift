@@ -2,7 +2,6 @@ import SwiftUI
 
 struct RecodeView: View {
     @Environment(\.colorScheme) var colorScheme
-    @Binding var Screen: Screen
     @State private var recodeTimeList: [recodeModel] = []
     
     @State private var graph:Bool = true
@@ -52,7 +51,7 @@ struct RecodeView: View {
     }
     // 戻るボタンが押されたときに実行される関数
     private func onBackButtonPressed() {
-        Screen = .start
+//        Screen = .start
     }
     
     private func loadRecodeListFromDefaults() -> [recodeModel] {

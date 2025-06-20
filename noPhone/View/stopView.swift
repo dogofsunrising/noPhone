@@ -7,7 +7,6 @@ struct StopView : View {
     
     @ObservedObject var interstitial = Interstitial()
     
-    @Binding var Screen: Screen
     @Binding var Ad:Bool
     
     @State var Moniter: Bool = true
@@ -161,7 +160,7 @@ struct StopView : View {
                     message: Text(popmess),
                     dismissButton: .default(Text("OK"),action: {
                         interstitial.presentInterstitial()
-                        Screen = .start
+//                        Screen = .start
                     })
                 )
             case .finish:
@@ -170,7 +169,7 @@ struct StopView : View {
                     message: Text(popmess),
                     dismissButton: .default(Text("OK"),action: {
                         Task{
-                            Screen = .start
+//                            Screen = .start
                         }
                     })
                 )

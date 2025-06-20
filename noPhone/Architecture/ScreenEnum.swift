@@ -1,5 +1,3 @@
-enum Screen {
-    case start
-    case stop
-    case recode
+enum Screen : Int{
+    case start, stop, recode
 }

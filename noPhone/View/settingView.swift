@@ -1,28 +1,12 @@
 import SwiftUI
 
 struct SettingView: View {
-    @Binding var setting: Bool // ポップアップを表示するかどうかの状態
     @State private var channelid: String = UserDefaults.standard.string(forKey: "channelid") ?? ""
     @State private var username: String = UserDefaults.standard.string(forKey: "username") ?? ""
     @State private var selectedtimer: TimerType = TimerType(rawValue: UserDefaults.standard.string(forKey: "timertype") ?? "") ?? .default
     @State private var errorMessage: String? = nil // エラーメッセージ
     
     var body: some View {
-        ZStack {
-            // 背景を透明な黒に設定
-            Color.black.opacity(0.5)
-                .edgesIgnoringSafeArea(.all) // 全画面を覆う
-                .onTapGesture {
-                    if channelid.isEmpty || username.isEmpty {
-                        errorMessage = "すべてのフィールドを入力してください"
-                    } else {
-                        UserDefaults.standard.set(channelid, forKey: "channelid")
-                        UserDefaults.standard.set(username, forKey: "username")
-                        UserDefaults.standard.set(selectedtimer.rawValue, forKey: "timertype")
-                        errorMessage = nil
-                        setting = false // ポップアップを閉じる
-                    }
-                }
             VStack {
                 Spacer()
                 // 白い四角形
@@ -80,7 +64,6 @@ struct SettingView: View {
                             UserDefaults.standard.set(username, forKey: "username")
                             UserDefaults.standard.set(selectedtimer.rawValue, forKey: "timertype")
                             errorMessage = nil
-                            setting = false // ポップアップを閉じる
                         }
                     }) {
                         Text("保存")
@@ -99,7 +82,6 @@ struct SettingView: View {
                 .padding(.horizontal, 40) // 四角形の幅を調整
                 Spacer()
             }
-        }
         .onAppear {
             // ビューが表示されたとき、ローカルデータをロード
             channelid = UserDefaults.standard.string(forKey: "channelid") ?? ""
