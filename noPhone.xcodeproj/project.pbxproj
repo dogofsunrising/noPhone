@@ -39,6 +39,16 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
+				View/noPhoneApp.swift,
+				View/POPstart.swift,
+				View/RecoTimeList.swift,
+				View/startView.swift,
+				View/Timers/countProtocol.swift,
+				View/Timers/MainTimer.swift,
+				View/Timers/RecoTimer.swift,
+				View/Timers/SelectedTimers/circlecount.swift,
+				View/Timers/SubTimer.swift,
+				View/Timers/TimerView.swift,
 			);
 			target = 54D9C2C12CF989F200302B1E /* noPhone */;
 		};
