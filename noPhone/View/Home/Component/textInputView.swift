@@ -4,6 +4,14 @@ struct textView: View {
     @Binding var textInputView: Bool
     @Binding var title:String
     var body: some View {
+        
+        ZStack{
+            // 背景を透明な黒に設定Add commentMore actions
+            Color.black.opacity(0.5)
+                .edgesIgnoringSafeArea(.all) // 全画面を覆う
+                .onTapGesture {
+                    textInputView = false
+                }
             VStack {
                 Spacer()
                 // 白い四角形
@@ -20,7 +28,7 @@ struct textView: View {
                     
                     VStack{
                         
-                    
+                        
                     }
                     // 保存ボタン
                     Button(action: {
@@ -42,5 +50,6 @@ struct textView: View {
                 .padding(.horizontal, 40) // 四角形の幅を調整
                 Spacer()
             }
+        }
     }
 }
