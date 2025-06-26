@@ -3,6 +3,8 @@ import SwiftUI
 struct textView: View {
     @Binding var textInputView: Bool
     @Binding var title:String
+    @State private var titles:[String] = []
+
     var body: some View {
         
         ZStack{
@@ -27,14 +29,42 @@ struct textView: View {
                         .padding(.horizontal, 20)
                     
                     VStack{
-                        
+                        HStack{
+                            VStack{
+                                Text("履歴")
+                                    .font(.subheadline)
+                                
+                                ForEach(titles, id: \.self) { index in
+                                    Button(action: {
+                                        title = index // ボタンを押すと `title` を更新
+                                    }, label: {
+                                        Text(index)
+                                            .foregroundColor(.blue)
+                                    })
+                                }
+                            }
+                            
+                            VStack {
+                                Text("Todo")
+                                    .font(.subheadline)
+                                
+                                ForEach(titles, id: \.self) { index in
+                                    Button(action: {
+                                        title = index // ボタンを押すと `title` を更新
+                                    }, label: {
+                                        Text(index)
+                                            .foregroundColor(.blue)
+                                    })
+                                }
+                            }
+                        }
                         
                     }
                     // 保存ボタン
                     Button(action: {
                         textInputView = false
                     }) {
-                        Text("終了")
+                        Text("保存")
                             .foregroundColor(.blue)
                             .padding(.top, 10)
                     }
@@ -51,5 +81,19 @@ struct textView: View {
                 Spacer()
             }
         }
+        .onAppear {
+            titles = loadTitles()
+        }
+    }
+    private func loadTitles() -> [String] {
+        if let savedData = UserDefaults.standard.data(forKey: "titlelist") {
+            do {
+                let titles = try JSONDecoder().decode([String].self, from: savedData)
+                return titles
+            } catch {
+                print("Failed to decode titles: \(error)")
+            }
+        }
+        return [] // データが存在しない場合やデコードに失敗した場合は空のリストを返す
     }
 }
