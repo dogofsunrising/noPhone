@@ -2,6 +2,7 @@ import SwiftUI
 
 struct POPstartView: View {
     @Environment(\.colorScheme) var colorScheme
+    @Binding var stop: Bool
     @Binding var popstart: Bool // ポップアップを表示するかどうかの状態
     @Binding var title:String
     @State var time:Int = 0
@@ -70,6 +71,7 @@ struct POPstartView: View {
                             } else {
                                 Task{
                                     await saveTitles()
+                                    stop = true
                                 }
                             }
                             
