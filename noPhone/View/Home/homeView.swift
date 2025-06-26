@@ -1,10 +1,25 @@
 import SwiftUI
 
 struct HomeView: View {
+    @State var textInputView: Bool = false
+    @State var title:String = UserDefaults.standard.string(forKey: "title") ?? ""
+    var body: some View {
+        ZStack{
+            Home2View(textInputView: $textInputView,title: $title)
+            if(textInputView){
+                textView(textInputView: $textInputView,title: $title)
+            }
+        }
+    }
+}
+
+struct Home2View: View {
     @Environment(\.colorScheme) var colorScheme
     
     @State private var setting = false
     @State private var popCheck = false
+    
+    @Binding var textInputView: Bool
     
     @State private var isOn = true
     
@@ -13,6 +28,7 @@ struct HomeView: View {
     @State private var username: String = ""
     @State private var time: Int = 0
     @State private var timerList: [Int] = []
+    @Binding var title: String
         
     @State private var delete:DeleteType = .non
     var body: some View {
@@ -35,29 +51,51 @@ struct HomeView: View {
                     }
                 }
                 
+                VStack{
+                Button {
+                    textInputView = true
+                } label: {
+                    HStack {
+                        Text("Title: ")
+                        if(title == ""){
+                            Text("Not Set")
+                        } else {
+                            Text(title)
+                        }
+                        Spacer()
+                    }
+                    .padding() // 必要なら余白
+                    .background(Color.cyan) // 背景色を設定
+                    .cornerRadius(20)
+
+                }
+                    
+                }
+                .padding(.vertical, 3)
+                .padding(.horizontal, 20)
+                
+                
                 TimerView(showAlert: $showAlert, delete: $delete, time: $time)
             }
         }
         .alert(isPresented: $showAlert) {
-            
-            if(delete != .load){
-                Alert(
-                    title: Text("エラー"),
-                    message: Text("チャンネルIDまたはユーザー名が保存されていません"),
-                    dismissButton: .default(Text("OK"),action: {
-                        
-                    })
-                )
-            } else {
-                Alert(
+            switch delete {
+            case .load:
+                return Alert(
                     title: Text("削除しますか？"),
                     message: Text("この操作はやり直せません"),
                     primaryButton: .destructive(Text("削除")) {
                         delete = .yes
                     },
-                    secondaryButton: .cancel(Text("キャンセル")){
+                    secondaryButton: .cancel(Text("キャンセル")) {
                         delete = .non
                     }
+                )
+            default:
+                return Alert(
+                    title: Text("エラー"),
+                    message: Text("チャンネルIDまたはユーザー名が保存されていません"),
+                    dismissButton: .default(Text("OK"))
                 )
             }
         }
@@ -71,6 +109,7 @@ struct HomeView: View {
                 UserDefaults.standard.set(numbers, forKey: "timerList")
                 timerList = UserDefaults.standard.array(forKey: "timerList") as? [Int] ?? []
             }
+            
             if channelid.isEmpty || username.isEmpty {
                 showAlert = true
                 setting.toggle()
