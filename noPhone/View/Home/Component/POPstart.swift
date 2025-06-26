@@ -9,6 +9,7 @@ struct POPstartView: View {
     @State private var titles:[String] = []
     @State private var selectedtimer: TimerType = TimerType(rawValue: UserDefaults.standard.string(forKey: "timertype") ?? "") ?? .default
     @State private var errorMessage: String? = nil // エラーメッセージ
+    @State private var isSaving = false
     
     var body: some View {
         ZStack {
@@ -68,13 +69,14 @@ struct POPstartView: View {
                         Button(action: {
                             if title.isEmpty {
                                 errorMessage = "タイトルを入力してください"
-                            } else {
-                                Task{
+                            } else if !isSaving {
+                                isSaving = true
+                                stop = true
+                                Task {
                                     await saveTitles()
-                                    stop = true
+                                    isSaving = false
                                 }
                             }
-                            
                         }) {
                             Text("確認して始める")
                                 .foregroundColor(ButtonColor(how: .text, scheme: colorScheme))
