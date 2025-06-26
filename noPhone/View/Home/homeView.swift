@@ -3,11 +3,16 @@ import SwiftUI
 struct HomeView: View {
     @State var textInputView: Bool = false
     @State var title:String = UserDefaults.standard.string(forKey: "title") ?? ""
+    @State var popCheck: Bool = false
     var body: some View {
         ZStack{
-            Home2View(textInputView: $textInputView,title: $title)
+            Home2View(popCheck: $popCheck, textInputView: $textInputView,title: $title)
             if(textInputView){
                 textView(textInputView: $textInputView,title: $title)
+            }
+            
+            if(popCheck){
+                POPstartView(popstart: $popCheck, title: $title)
             }
         }
     }
@@ -17,7 +22,7 @@ struct Home2View: View {
     @Environment(\.colorScheme) var colorScheme
     
     @State private var setting = false
-    @State private var popCheck = false
+    @Binding var popCheck:Bool
     
     @Binding var textInputView: Bool
     

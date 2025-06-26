@@ -3,9 +3,10 @@ import SwiftUI
 struct POPstartView: View {
     @Environment(\.colorScheme) var colorScheme
     @Binding var popstart: Bool // ポップアップを表示するかどうかの状態
-    @Binding var Screen:Screen
-    @State private var title:String = ""
+    @Binding var title:String
+    @State var time:Int = 0
     @State private var titles:[String] = []
+    @State private var selectedtimer: TimerType = TimerType(rawValue: UserDefaults.standard.string(forKey: "timertype") ?? "") ?? .default
     @State private var errorMessage: String? = nil // エラーメッセージ
     
     var body: some View {
@@ -21,33 +22,36 @@ struct POPstartView: View {
                 Spacer()
                 // 白い四角形
                 VStack(spacing: 10) {
-                    Text("タイトル")
+                    Text("確認")
                         .font(.headline)
+                    MainTimer(timer: time)
+                    HStack{
+                        Text("タイトル")
+                        
+                        // ユーザー名を入力するTextField
+                        Text(title)
+                            .padding()
+                            .background(Color(UIColor.systemGray6))
+                            .cornerRadius(8)
+                            .padding(.horizontal, 20)
+                    }
                     
-                    // ユーザー名を入力するTextField
-                    TextField("タイトルの入力", text: $title)
-                        .padding()
-                        .background(Color(UIColor.systemGray6))
-                        .cornerRadius(8)
-                        .padding(.horizontal, 20)
+                    HStack{
+                        Text("タイマーの種類")
+                        
+                        // ユーザー名を入力するTextField
+                        Text(selectedtimer.rawValue)
+                            .padding()
+                            .background(Color(UIColor.systemGray6))
+                            .cornerRadius(8)
+                            .padding(.horizontal, 20)
+                    }
                     
                     // エラーメッセージを表示
                     if let errorMessage = errorMessage {
                         Text(errorMessage)
                             .foregroundColor(.red)
                             .font(.caption)
-                    }
-                    Text("履歴")
-                        .font(.subheadline)
-                       
-                    ForEach(titles, id: \.self) { index in
-                        Button(action: {
-                            title = index // ボタンを押すと `title` を更新
-                        }, label: {
-                            Text(index)
-                                .font(.title2)
-                                .foregroundColor(ButtonColor(how: .text, scheme: colorScheme))
-                        })
                     }
                     HStack{
                         // 保存ボタン
@@ -70,7 +74,7 @@ struct POPstartView: View {
                             }
                             
                         }) {
-                            Text("始める")
+                            Text("確認して始める")
                                 .foregroundColor(ButtonColor(how: .text, scheme: colorScheme))
                                 .padding(.top, 10)
                         }
@@ -90,6 +94,7 @@ struct POPstartView: View {
         }
         .onAppear {
             titles = loadTitles()
+            time = UserDefaults.standard.integer(forKey: "selectedTimer")
         }
     }
     
@@ -116,7 +121,7 @@ struct POPstartView: View {
         do {
             let data = try JSONEncoder().encode(titles)
             UserDefaults.standard.set(data, forKey: "titlelist")
-            Screen = .stop
+//            Screen = .stop
             let reporter = API()
             await reporter.startAPI()
             
