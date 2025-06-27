@@ -12,14 +12,14 @@ struct noPhoneApp: App {
                 if(stop){
                     StopView(Ad: $Ad, stop: $stop)
                 } else {
-                    //                    BannerContentView(navigationTitle: "Banner")
+                    // BannerContentView(navigationTitle: "Banner")
                     TabView(selection: $Screen) {
                         HomeView(stopTimer: $stop)
                             .tag(0)
                             .tabItem {
                                 Label("Home", systemImage: "lock.fill")
                             }
-                        SettingView()
+                        TodoView()
                             .tag(1)
                             .tabItem {
                                 Label("ToDo", systemImage: "lock.doc")
