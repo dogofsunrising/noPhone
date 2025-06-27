@@ -8,6 +8,7 @@ struct StopView : View {
     @ObservedObject var interstitial = Interstitial()
     
     @Binding var Ad:Bool
+    @Binding var stop:Bool
     
     @State var Moniter: Bool = true
     

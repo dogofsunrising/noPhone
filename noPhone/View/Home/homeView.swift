@@ -5,26 +5,18 @@ struct HomeView: View {
     @State var title:String = UserDefaults.standard.string(forKey: "title") ?? ""
     @State var popCheck: Bool = false
     
-    @State var stopTimer: Bool = false
+    @Binding var stopTimer: Bool
     @State var Ad: Bool = false
     var body: some View {
         ZStack{
-//            if(!Ad){
-                if(stopTimer){
-                    StopView(Ad: $Ad)
-                } else {
-                    Home2View(popCheck: $popCheck, textInputView: $textInputView,title: $title)
-                    if(textInputView){
-                        textView(textInputView: $textInputView,title: $title)
-                    }
-                    
-                    if(popCheck){
-                        POPstartView( stop: $stopTimer,popstart: $popCheck, title: $title)
-                    }
-                }
-//            } else {
-//                
-//            }
+            Home2View(popCheck: $popCheck, textInputView: $textInputView,title: $title)
+            if(textInputView){
+                textView(textInputView: $textInputView,title: $title)
+            }
+            
+            if(popCheck){
+                POPstartView(stop: $stopTimer,popstart: $popCheck, title: $title)
+            }
         }
     }
 }
