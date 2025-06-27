@@ -8,38 +8,36 @@ struct noPhoneApp: App {
     @State private var stop:Bool = false
     var body: some Scene {
         WindowGroup {
-            ZStack {
-//                GradientBackgroundView()
-                VStack{
-                    if(stop){
-                        StopView(Ad: $Ad, stop: $stop)
-                    } else {
-//                    BannerContentView(navigationTitle: "Banner")
-                        TabView(selection: $Screen) {
-                            HomeView(stopTimer: $stop)
-                                .tag(0)
-                                .tabItem {
-                                    Label("Home", systemImage: "lock.fill")
-                                }
-                            SettingView()
-                                .tag(1)
-                                .tabItem {
-                                    Label("ToDo", systemImage: "lock.doc")
-                                }
-                            RecodeView()
-                                .tag(2)
-                                .tabItem {
-                                    Label("Moniter", systemImage: "lock.laptopcomputer")
-                                }
-                            SettingView()
-                                .tag(3)
-                                .tabItem {
-                                    Label("Setting", systemImage: "gearshape.fill")
-                                }
-                        }
+            ZStack{
+                if(stop){
+                    StopView(Ad: $Ad, stop: $stop)
+                } else {
+                    //                    BannerContentView(navigationTitle: "Banner")
+                    TabView(selection: $Screen) {
+                        HomeView(stopTimer: $stop)
+                            .tag(0)
+                            .tabItem {
+                                Label("Home", systemImage: "lock.fill")
+                            }
+                        SettingView()
+                            .tag(1)
+                            .tabItem {
+                                Label("ToDo", systemImage: "lock.doc")
+                            }
+                        RecodeView()
+                            .tag(2)
+                            .tabItem {
+                                Label("Moniter", systemImage: "lock.laptopcomputer")
+                            }
+                        SettingView()
+                            .tag(3)
+                            .tabItem {
+                                Label("Setting", systemImage: "gearshape.fill")
+                            }
                     }
                 }
             }
+            .animation(.easeInOut(duration: 0.5), value: stop)
             .animation(.easeInOut(duration: 0.5), value: Screen)
         }
     }

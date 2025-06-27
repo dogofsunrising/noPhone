@@ -5,7 +5,7 @@ struct StopView : View {
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.colorScheme) var colorScheme
     
-    @ObservedObject var interstitial = Interstitial()
+//    @ObservedObject var interstitial = Interstitial()
     
     @Binding var Ad:Bool
     @Binding var stop:Bool
@@ -52,10 +52,9 @@ struct StopView : View {
                 }
                 if(countup){
                     Button {
-                        Task{
-                            showAlert = true
-                            AlertType = .end
-                        }
+                        print("countUp Button")
+                        showAlert = true
+                        AlertType = .end
                     } label: {
                         ZStack{
                             Rectangle()
@@ -76,10 +75,10 @@ struct StopView : View {
                 LoadingAlert()
             }
         }
-        .onAppear() {
-            interstitial.loadInterstitial()
-        }
-        .disabled(!interstitial.interstitialAdLoaded)
+//        .onAppear() {
+//            interstitial.loadInterstitial()
+//        }
+//        .disabled(!interstitial.interstitialAdLoaded)
         .onAppear {
             time = UserDefaults.standard.integer(forKey: "selectedTimer")
             initimer = time
@@ -160,8 +159,8 @@ struct StopView : View {
                     title: Text("終了します"),
                     message: Text(popmess),
                     dismissButton: .default(Text("OK"),action: {
-                        interstitial.presentInterstitial()
-//                        Screen = .start
+//                        interstitial.presentInterstitial()
+                        stop = true
                     })
                 )
             case .finish:
@@ -169,9 +168,8 @@ struct StopView : View {
                     title: Text("おめでとう！"),
                     message: Text(popmess),
                     dismissButton: .default(Text("OK"),action: {
-                        Task{
-//                            Screen = .start
-                        }
+                        print("タイマー終了")
+                            stop = false
                     })
                 )
             case .end:

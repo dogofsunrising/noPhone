@@ -70,7 +70,7 @@ public final class API {
                     do {
                         if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
                            let statusCode = json["statusCode"] as? Int {
-                            print("API statusCode: \(statusCode)")
+                            print("start API statusCode: \(statusCode)")
                         } else {
                             print("statusCode key not found in response.")
                         }
