@@ -4,7 +4,7 @@ struct textView: View {
     @Binding var textInputView: Bool
     @Binding var title:String
     @State private var titles:[String] = []
-
+    @State private var todos:[TodoItem] = []
     var body: some View {
         
         ZStack{
@@ -48,13 +48,13 @@ struct textView: View {
                                 Text("Todo")
                                     .font(.subheadline)
                                 
-                                ForEach(titles, id: \.self) { index in
+                                ForEach(todos.prefix(10), id: \.self) { item in
                                     Button(action: {
-                                        title = index // ボタンを押すと `title` を更新
-                                    }, label: {
-                                        Text(index)
+                                        title = item.text // ボタンを押すと `title` を更新
+                                    }) {
+                                        Text(item.text)
                                             .foregroundColor(.blue)
-                                    })
+                                    }
                                 }
                             }
                         }
@@ -83,6 +83,7 @@ struct textView: View {
         }
         .onAppear {
             titles = loadTitles()
+            loadTodo()
         }
     }
     private func loadTitles() -> [String] {
@@ -95,5 +96,12 @@ struct textView: View {
             }
         }
         return [] // データが存在しない場合やデコードに失敗した場合は空のリストを返す
+    }
+    
+    private func loadTodo() {
+        if let data = UserDefaults.standard.data(forKey: "todoList"),
+           let decoded = try? JSONDecoder().decode([TodoItem].self, from: data) {
+            todos = decoded
+        }
     }
 }
