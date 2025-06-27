@@ -24,7 +24,7 @@ struct noPhoneApp: App {
                             .tabItem {
                                 Label("ToDo", systemImage: "lock.doc")
                             }
-                        RecodeView()
+                        MoniterView()
                             .tag(2)
                             .tabItem {
                                 Label("Moniter", systemImage: "lock.laptopcomputer")
