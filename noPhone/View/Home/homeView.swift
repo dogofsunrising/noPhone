@@ -118,13 +118,6 @@ struct Home2View: View {
                 timerList = UserDefaults.standard.array(forKey: "timerList") as? [Int] ?? []
             }
             
-            if channelid.isEmpty || username.isEmpty {
-                showAlert = true
-                setting.toggle()
-            } else {
-                showAlert = false
-            }
-            
             if time == 0 {
                 isOn = false
             }
