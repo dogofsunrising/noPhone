@@ -100,7 +100,7 @@ struct TodoView: View {
     }
 }
 
-struct TodoItem: Identifiable, Codable, Equatable {
+struct TodoItem: Identifiable, Codable, Equatable, Hashable {
     var id = UUID()
     var text: String
 }
