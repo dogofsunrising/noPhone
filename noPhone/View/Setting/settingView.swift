@@ -55,21 +55,7 @@ struct SettingView: View {
                             .foregroundColor(.red)
                             .font(.caption)
                     }
-                    // 保存ボタン
-                    Button(action: {
-                        if channelid.isEmpty || username.isEmpty {
-                            errorMessage = "すべてのフィールドを入力してください"
-                        } else {
-                            UserDefaults.standard.set(channelid, forKey: "channelid")
-                            UserDefaults.standard.set(username, forKey: "username")
-                            UserDefaults.standard.set(selectedtimer.rawValue, forKey: "timertype")
-                            errorMessage = nil
-                        }
-                    }) {
-                        Text("保存")
-                            .foregroundColor(.blue)
-                            .padding(.top, 10)
-                    }
+                    
                 }
                 .padding()
                 .background(
@@ -86,6 +72,11 @@ struct SettingView: View {
             // ビューが表示されたとき、ローカルデータをロード
             channelid = UserDefaults.standard.string(forKey: "channelid") ?? ""
             username = UserDefaults.standard.string(forKey: "username") ?? ""
+        }
+        .onDisappear{
+            UserDefaults.standard.set(channelid, forKey: "channelid")
+            UserDefaults.standard.set(username, forKey: "username")
+            UserDefaults.standard.set(selectedtimer.rawValue, forKey: "timertype")
         }
     }
 }
