@@ -4,6 +4,7 @@ struct RecodeView: View {
     @Environment(\.colorScheme) var colorScheme
     @State private var recodeTimeList: [recodeModel] = []
     
+    @Binding var isRecode: Bool
     @State private var graph:Bool = true
     var body: some View {
         NavigationView {
@@ -51,7 +52,7 @@ struct RecodeView: View {
     }
     // 戻るボタンが押されたときに実行される関数
     private func onBackButtonPressed() {
-//        Screen = .start
+        isRecode = false
     }
     
     private func loadRecodeListFromDefaults() -> [recodeModel] {
