@@ -26,26 +26,17 @@ struct RecoMainView: View {
                                     VStack{
                                         HStack{
                                             Spacer()
-                                            Text(formattedDate(date: recodeTimeList[index].date))
-                                                .font(.title3)
-                                            
-                                            Spacer()
                                             
                                             Text(recodeTimeList[index].title)
-                                                .font(.title2)
                                                 .foregroundColor(recodeTimeList[index].close ? .blue : .red)
                                             Spacer()
                                             
                                         }
                                         HStack {
-                                            Image(systemName: "timer") // アイコン
-                                                .resizable()
-                                                .frame(width: 20, height: 20)
-                                            RecoTimer(timer: recodeTimeList[index].settingtime, close: recodeTimeList[index].close,on:false)
                                             Spacer()
                                             Image(systemName: "person.badge.clock") // アイコン
                                                 .resizable()
-                                                .frame(width: 20, height: 20)
+                                                .frame(width: 10, height: 10)
                                             
                                             RecoTimer(timer: recodeTimeList[index].realtime, close: recodeTimeList[index].close,on:true)
                                             Spacer()
@@ -57,6 +48,7 @@ struct RecoMainView: View {
                         }
                     }
                 }
+                Spacer()
             }
         }
         .onAppear(perform: {
