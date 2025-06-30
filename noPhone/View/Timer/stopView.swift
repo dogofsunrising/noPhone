@@ -160,7 +160,7 @@ struct StopView : View {
                     message: Text(popmess),
                     dismissButton: .default(Text("OK"),action: {
 //                        interstitial.presentInterstitial()
-                        stop = true
+                        stop = false
                     })
                 )
             case .finish:

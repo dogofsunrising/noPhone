@@ -5,7 +5,9 @@ struct POPstartView: View {
     @Binding var stop: Bool
     @Binding var popstart: Bool // ポップアップを表示するかどうかの状態
     @Binding var title:String
+    @State var isButton:Bool = true
     @State var time:Int = 0
+    @State var username:String = ""
     @State private var titles:[String] = []
     @State private var selectedtimer: TimerType = TimerType(rawValue: UserDefaults.standard.string(forKey: "timertype") ?? "") ?? .default
     @State private var errorMessage: String? = nil // エラーメッセージ
@@ -27,6 +29,17 @@ struct POPstartView: View {
                     Text("確認")
                         .font(.headline)
                     MainTimer(timer: time)
+                    HStack{
+                        Text("ユーザーネーム")
+                        
+                        // ユーザー名を入力するTextField
+                        Text(username)
+                            .padding()
+                            .background(Color(UIColor.systemGray6))
+                            .cornerRadius(8)
+                            .padding(.horizontal, 20)
+                    }
+                    
                     HStack{
                         Text("タイトル")
                         
@@ -67,8 +80,8 @@ struct POPstartView: View {
                         Spacer()
                         // 保存ボタン
                         Button(action: {
-                            if title.isEmpty {
-                                errorMessage = "タイトルを入力してください"
+                            if title.isEmpty || username == "" {
+                                errorMessage = "入力が不足しています"
                             } else if !isSaving {
                                 isSaving = true
                                 stop = true
@@ -82,6 +95,7 @@ struct POPstartView: View {
                                 .foregroundColor(ButtonColor(how: .text, scheme: colorScheme))
                                 .padding(.top, 10)
                         }
+                        .disabled(!isButton)
                     }
                 }
                 .padding()
@@ -98,7 +112,14 @@ struct POPstartView: View {
         }
         .onAppear {
             titles = loadTitles()
+            username = UserDefaults.standard.string(forKey: "username") ?? ""
             time = UserDefaults.standard.integer(forKey: "selectedTimer")
+            if title.isEmpty || username == "" {
+                errorMessage = "入力が不足しています"
+                isButton = false
+            } else {
+                isButton = true
+            }
         }
     }
     
