@@ -1,7 +1,15 @@
 import SwiftUI
 
 struct MoniterView: View {
+    @State var isRecode: Bool = false
     var body: some View {
-        Text("Hello, World!")
+        VStack {
+            if(!isRecode){
+                RecoMainView(isRecode: $isRecode)
+            }else{
+                RecodeView(isRecode: $isRecode)
+            }
+
+        }
     }
 }

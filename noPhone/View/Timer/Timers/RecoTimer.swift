@@ -47,7 +47,6 @@ struct RecoTimer: View {
     var body: some View {
         Text(formattedTime)
             .foregroundColor(textColor)
-            .font(.title3)
     }
 }
 
