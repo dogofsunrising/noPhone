@@ -1,11 +1,20 @@
 import SwiftUI
 
 struct SettingView: View {
-    @State private var channelid: String = UserDefaults.standard.string(forKey: "channelid") ?? ""
+    @State private var channels: [Channel] = []
     @State private var username: String = UserDefaults.standard.string(forKey: "username") ?? ""
     @State private var selectedtimer: TimerType = TimerType(rawValue: UserDefaults.standard.string(forKey: "timertype") ?? "") ?? .default
     @State private var errorMessage: String? = nil // エラーメッセージ
     @FocusState private var isInputActive: Bool
+    
+    @State private var isChannels: Bool = false
+    @State private var isShowAlert: Bool = false
+    @State private var AlertType: SettingAlertType = .non
+    
+    @State private var isChannelPage: Bool = false
+    @State private var selectedChannelIndex: Int = 0
+    
+    @State private var isChannelAdd: Bool = false
     var body: some View {
         ZStack{
             Color(.systemBackground)
@@ -13,6 +22,7 @@ struct SettingView: View {
                 .onTapGesture {
                     isInputActive = false
                 }
+            
             VStack {
                 Spacer()
                 // 白い四角形
@@ -28,23 +38,6 @@ struct SettingView: View {
                         .padding(.horizontal, 20)
                         .focused($isInputActive)
                     
-                    VStack{
-                        
-                        // チャンネルIDを入力するTextField
-                        TextField("チャンネルIDを入力", text: $channelid)
-                            .padding()
-                            .background(Color(UIColor.systemGray6))
-                            .cornerRadius(8)
-                            .padding(.horizontal, 20)
-                            .focused($isInputActive)
-                        HStack{
-                            Spacer()
-                            Link("チャンネルIDとは？", destination: URL(string: "https://support.discord.com/hc/ja/articles/206346498-%E3%83%A6%E3%83%BC%E3%82%B6%E3%83%BC-%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC-%E3%83%A1%E3%83%83%E3%82%BB%E3%83%BC%E3%82%B8ID%E3%81%AF%E3%81%A9%E3%81%93%E3%81%A7%E8%A6%8B%E3%81%A4%E3%81%91%E3%82%89%E3%82%8C%E3%82%8B")!)
-                                .font(.caption)
-                                .foregroundColor(.blue)
-                                .padding(.horizontal, 20)
-                        }
-                    }
                     HStack{
                         Text("タイマーカスタム")
                         Picker("タイマー画面の設定", selection: $selectedtimer) {
@@ -57,6 +50,21 @@ struct SettingView: View {
                     .background(Color(red: 0, green: 0, blue: 0, opacity: 0.1))
                     .cornerRadius(5)
                     
+                    VStack{
+                        
+                        ChannelsView(channels: $channels, PageIndex: $selectedChannelIndex, isShowPage: $isChannelPage, ChannelAdd: $isChannelAdd)
+                        HStack{
+                            Spacer()
+//                            Link("チャンネルIDとは？", destination: URL(string: "https://support.discord.com/hc/ja/articles/206346498-%E3%83%A6%E3%83%BC%E3%82%B6%E3%83%BC-%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC-%E3%83%A1%E3%83%83%E3%82%BB%E3%83%BC%E3%82%B8ID%E3%81%AF%E3%81%A9%E3%81%93%E3%81%A7%E8%A6%8B%E3%81%A4%E3%81%91%E3%82%89%E3%82%8C%E3%82%8B")!)
+//                                .font(.caption)
+//                                .foregroundColor(.blue)
+//                                .padding(.horizontal, 20)
+                        }
+                    }
+                    if(channels.isEmpty){
+                        Spacer()
+                    }
+                    
                     // エラーメッセージを表示
                     if let errorMessage = errorMessage {
                         Text(errorMessage)
@@ -65,27 +73,62 @@ struct SettingView: View {
                     }
                     
                 }
-                .padding()
-                .background(
-                    Color(UIColor { traitCollection in
-                        return traitCollection.userInterfaceStyle == .dark ? UIColor.black : UIColor.white
-                    })
-                )
-                .cornerRadius(16)
-                .shadow(radius: 10)
-                .padding(.horizontal, 40) // 四角形の幅を調整
                 Spacer()
             }
+            
+            if(isChannelPage){
+                ChannelPageView(isPage: $isChannelPage, channelIndex: $selectedChannelIndex,channel: channels[selectedChannelIndex] ,isShowAlert: $isShowAlert, AlertType: $AlertType)
+            } else if(isChannelAdd){
+                ChannelAddPageView(isPage: $isChannelAdd, channels: $channels)
+            }
+        }
+        .alert(isPresented: $isShowAlert) {
+            switch AlertType {
+            case .channelDelete(let index):
+                    return Alert(
+                        title: Text("削除しますか？"),
+                        message: Text("この操作はやり直せません"),
+                        primaryButton: .destructive(Text("削除")) {
+                            isChannelPage = false
+                            if channels.indices.contains(index) {
+                                channels.remove(at: index)
+                            }
+                        },
+                        secondaryButton: .cancel(Text("キャンセル")) {
+                            isShowAlert = false
+                        }
+                    )
+                case .non:
+                    return Alert(
+                        title: Text("無効の入力"),
+                        message: Text("エラーが起きてます"),
+                        dismissButton: .default(Text("OK"))
+                    )
+                }
         }
         .onAppear {
-            // ビューが表示されたとき、ローカルデータをロード
-            channelid = UserDefaults.standard.string(forKey: "channelid") ?? ""
+            if let data = UserDefaults.standard.data(forKey: "channels"),
+               let decoded = try? JSONDecoder().decode([Channel].self, from: data) {
+                channels = decoded
+            }
             username = UserDefaults.standard.string(forKey: "username") ?? ""
         }
-        .onDisappear{
-            UserDefaults.standard.set(channelid, forKey: "channelid")
+        .onDisappear {
+            if let encoded = try? JSONEncoder().encode(channels) {
+                UserDefaults.standard.set(encoded, forKey: "channels")
+            }
             UserDefaults.standard.set(username, forKey: "username")
             UserDefaults.standard.set(selectedtimer.rawValue, forKey: "timertype")
         }
+    }
+}
+
+struct Channel: Decodable, Encodable, Hashable {
+    var name: String
+    var channelid: [String: String]
+    
+    init(name: String, channelid: [String: String]) {
+        self.name = name
+        self.channelid = channelid
     }
 }
