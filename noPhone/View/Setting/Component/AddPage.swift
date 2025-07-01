@@ -47,6 +47,14 @@ struct ChannelAddPageView: View {
                                 .background(newChannelPlatform == "discord" ? Color.blue.opacity(0.2) : Color.gray.opacity(0.2))
                                 .cornerRadius(8)
                         }
+                        Button {
+                            newChannelPlatform = "slack"
+                        } label: {
+                            Text("SLACK")
+                                .padding()
+                                .background(newChannelPlatform == "slack" ? Color.blue.opacity(0.2) : Color.gray.opacity(0.2))
+                                .cornerRadius(8)
+                        }
                     }
 
                     TextField("Channel ID", text: $newChannelID)
