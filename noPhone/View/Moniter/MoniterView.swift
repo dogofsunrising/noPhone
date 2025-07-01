@@ -9,7 +9,8 @@ struct MoniterView: View {
             }else{
                 RecodeView(isRecode: $isRecode)
             }
-
+            ScreenTimeMainView()
+            Spacer()
         }
     }
 }
