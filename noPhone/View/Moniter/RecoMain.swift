@@ -48,13 +48,11 @@ struct RecoMainView: View {
                         }
                     }
                 }
-                Spacer()
             }
         }
         .onAppear(perform: {
             recodeTimeList = loadRecodeListFromDefaults()
         })
-        .navigationBarTitle("Moniter", displayMode: .inline)
     }
     
     private func loadRecodeListFromDefaults() -> [recodeModel] {

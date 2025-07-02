@@ -6,11 +6,11 @@ struct MoniterView: View {
         VStack {
             if(!isRecode){
                 RecoMainView(isRecode: $isRecode)
+                ScreenTimeMainView()
+                Spacer()
             }else{
                 RecodeView(isRecode: $isRecode)
             }
-            ScreenTimeMainView()
-            Spacer()
         }
     }
 }
