@@ -9,7 +9,7 @@ struct ScreenTimeMainView: View {
         ZStack {
             // ぼかしたい対象全体
             VStack {
-                
+                ScScreenTimeBlurView()
             }
             // ぼかしと操作無効化
             .blur(radius: blur ? 5 : 0)
