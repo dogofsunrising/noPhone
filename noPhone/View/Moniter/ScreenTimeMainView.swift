@@ -40,20 +40,6 @@ struct ScreenTimeMainView: View {
             }
         }
         .onAppear {
-            // 初期状態を即チェック
-            switch AuthorizationCenter.shared.authorizationStatus {
-            case .notDetermined:
-                blur = true
-                print("初回チェック: a")
-            case .denied:
-                blur = true
-                print("初回チェック: c")
-            case .approved:
-                blur = false
-                print("初回チェック: s")
-            @unknown default:
-                blur = true
-            }
             
             // 状態の変化を監視
             _ = AuthorizationCenter.shared.$authorizationStatus
@@ -61,13 +47,10 @@ struct ScreenTimeMainView: View {
                     switch AuthorizationCenter.shared.authorizationStatus {
                     case .notDetermined:
                         blur = true
-                        print("更新: a")
                     case .denied:
                         blur = true
-                        print("更新: c")
                     case .approved:
                         blur = false
-                        print("更新: s")
                     @unknown default:
                         blur = true
                     }

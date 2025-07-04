@@ -1,4 +1,5 @@
 import SwiftUI
+import FamilyControls
 
 struct HomeView: View {
     @State var textInputView: Bool = false
@@ -16,6 +17,12 @@ struct HomeView: View {
             
             if(popCheck){
                 POPstartView(stop: $stopTimer,popstart: $popCheck, title: $title)
+            }
+        }.onAppear {
+            switch AuthorizationCenter.shared.authorizationStatus {
+            case .notDetermined: break
+            case .denied: break
+            case .approved: break
             }
         }
     }
