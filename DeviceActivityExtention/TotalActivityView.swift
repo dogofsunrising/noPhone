@@ -9,70 +9,60 @@ struct TotalActivityView: View {
     
     @State private var categoryDurations: [String: Int] = [:] // ← 表示用の辞書
     
-    @State private var tap : Bool = false
-
     var body: some View {
         VStack {
-            ZStack {
-                switch contextLabel {
-                case "barGraph":
-                    switch totalActivity.segmentInterval {
-                    case .hourly:
-                        Chart(totalActivity.durations, id: \.dateInterval.start) { segment in
-                            BarMark(
-                                x: .value("Time", segment.dateInterval.start, unit: .hour),
-                                y: .value("Duration (min)", segment.duration / 60)
-                            )
-                        }
-                        .chartXAxisLabel("時間")
-                        .chartYAxisLabel("使用時間（分）")
-                        .frame(height: 300)
-                        
-                    case .daily:
-                        Chart(totalActivity.durations, id: \.dateInterval.start) { segment in
-                            BarMark(
-                                x: .value("Date", segment.dateInterval.start, unit: .day),
-                                y: .value("Duration (min)", segment.duration / 60)
-                            )
-                        }
-                        .chartXAxisLabel("日付")
-                        .chartYAxisLabel("使用時間（分）")
-                        .frame(height: 300)
-                        
-                    case .weekly:
-                        Chart(totalActivity.durations, id: \.dateInterval.start) { segment in
-                            BarMark(
-                                x: .value("Week", segment.dateInterval.start, unit: .weekOfYear),
-                                y: .value("Duration (min)", segment.duration / 60)
-                            )
-                        }
-                        .chartXAxisLabel("週")
-                        .chartYAxisLabel("使用時間（分）")
-                        .frame(height: 300)
-                        
-                    @unknown default:
-                        Text("未対応の時間区切りです")
+            HStack{
+                switch totalActivity.segmentInterval {
+                case .hourly:
+                    Chart(totalActivity.durations, id: \.dateInterval.start) { segment in
+                        BarMark(
+                            x: .value("Time", segment.dateInterval.start, unit: .hour),
+                            y: .value("Duration (min)", segment.duration / 60)
+                        )
                     }
-                default:
-                    Text("不明なグラフ形式です")
+                    .chartXAxisLabel("時間")
+                    .chartYAxisLabel("使用時間（分）")
+                    .frame(height: 300)
+                    
+                case .daily:
+                    Chart(totalActivity.durations, id: \.dateInterval.start) { segment in
+                        BarMark(
+                            x: .value("Date", segment.dateInterval.start, unit: .day),
+                            y: .value("Duration (min)", segment.duration / 60)
+                        )
+                    }
+                    .chartXAxisLabel("日付")
+                    .chartYAxisLabel("使用時間（分）")
+                    .frame(height: 300)
+                    
+                case .weekly:
+                    Chart(totalActivity.durations, id: \.dateInterval.start) { segment in
+                        BarMark(
+                            x: .value("Week", segment.dateInterval.start, unit: .weekOfYear),
+                            y: .value("Duration (min)", segment.duration / 60)
+                        )
+                    }
+                    .chartXAxisLabel("週")
+                    .chartYAxisLabel("使用時間（分）")
+                    .frame(height: 300)
+                    
+                @unknown default:
+                    Text("未対応の時間区切りです")
                 }
                 
-                if tap {
-                    List(categoryDurations.sorted(by: { $0.key < $1.key }), id: \.key) { key, value in
+                VStack(alignment: .leading) {
+                    Text("カテゴリ別使用時間")
+                    List(categoryDurations.sorted(by: { $0.value > $1.value }), id: \.key) { key, value in
                         HStack {
                             Text(key)
                             Spacer()
                             Text("\(value) 分")
                         }
+                        
                     }
+                    .clipShape(RoundedRectangle(cornerRadius: 16)) // 角丸
+                    .scenePadding(.bottom)
                 }
-                
-                
-                Color(.systemBackground)
-                    .ignoresSafeArea()
-                    .onTapGesture {
-                        tap.toggle()
-                    }
             }
         }
         .padding()

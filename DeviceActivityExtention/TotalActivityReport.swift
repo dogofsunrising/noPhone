@@ -19,7 +19,7 @@ extension DeviceActivityReport.Context {
 
 struct TotalActivityReport: DeviceActivityReportScene {
     // Define which context your scene will represent.
-    @State var context: DeviceActivityReport.Context
+    let context: DeviceActivityReport.Context
     
     // Define the custom configuration and the resulting view for this report.
     let content: (TotalActivityModel) -> TotalActivityView
@@ -28,7 +28,6 @@ struct TotalActivityReport: DeviceActivityReportScene {
         // Reformat the data into a configuration that can be used to create
         // the report's view.
         
-        os_log("Running makeConfiguration", log: .default, type: .info)
         var firstData: DeviceActivityData?
         for await item in data {
             firstData = item

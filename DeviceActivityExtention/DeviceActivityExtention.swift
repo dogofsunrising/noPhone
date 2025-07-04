@@ -1,9 +1,3 @@
-//
-//  DeviceActivityExtention.swift
-//  DeviceActivityExtention
-//
-//  Created by 藤本皇汰 on 2025/07/05.
-//
 
 import DeviceActivity
 import SwiftUI
