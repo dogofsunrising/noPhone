@@ -7,11 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		544C63DE2E1829C5007704B4 /* DeviceActivityExtention.appex in Embed ExtensionKit Extensions */ = {isa = PBXBuildFile; fileRef = 544C63D22E1829C5007704B4 /* DeviceActivityExtention.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		54B2EF592D22409F00B30A75 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 54B2EF582D22409F00B30A75 /* GoogleMobileAds */; };
 		54D9C35F2D0194BD00302B1E /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 54D9C35E2D0194BD00302B1E /* Alamofire */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		544C63DC2E1829C5007704B4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 54D9C2BA2CF989F200302B1E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 544C63D12E1829C5007704B4;
+			remoteInfo = DeviceActivityExtention;
+		};
 		54D9C2D32CF989F400302B1E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 54D9C2BA2CF989F200302B1E /* Project object */;
@@ -28,13 +36,35 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		544C63E32E1829C5007704B4 /* Embed ExtensionKit Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(EXTENSIONS_FOLDER_PATH)";
+			dstSubfolderSpec = 16;
+			files = (
+				544C63DE2E1829C5007704B4 /* DeviceActivityExtention.appex in Embed ExtensionKit Extensions */,
+			);
+			name = "Embed ExtensionKit Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		544C63D22E1829C5007704B4 /* DeviceActivityExtention.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.extensionkit-extension"; includeInIndex = 0; path = DeviceActivityExtention.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		54D9C2C22CF989F200302B1E /* noPhone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = noPhone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		54D9C2D22CF989F400302B1E /* noPhoneTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = noPhoneTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		54D9C2DC2CF989F400302B1E /* noPhoneUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = noPhoneUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		544C63E22E1829C5007704B4 /* Exceptions for "DeviceActivityExtention" folder in "DeviceActivityExtention" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 544C63D12E1829C5007704B4 /* DeviceActivityExtention */;
+		};
 		54B2EF5B2D22419000B30A75 /* Exceptions for "noPhone" folder in "noPhone" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -45,6 +75,14 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		544C63D32E1829C5007704B4 /* DeviceActivityExtention */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				544C63E22E1829C5007704B4 /* Exceptions for "DeviceActivityExtention" folder in "DeviceActivityExtention" target */,
+			);
+			path = DeviceActivityExtention;
+			sourceTree = "<group>";
+		};
 		54D9C2C42CF989F200302B1E /* noPhone */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -56,6 +94,13 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		544C63CF2E1829C5007704B4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		54D9C2BF2CF989F200302B1E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -86,6 +131,7 @@
 			isa = PBXGroup;
 			children = (
 				54D9C2C42CF989F200302B1E /* noPhone */,
+				544C63D32E1829C5007704B4 /* DeviceActivityExtention */,
 				54D9C2C32CF989F200302B1E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -96,6 +142,7 @@
 				54D9C2C22CF989F200302B1E /* noPhone.app */,
 				54D9C2D22CF989F400302B1E /* noPhoneTests.xctest */,
 				54D9C2DC2CF989F400302B1E /* noPhoneUITests.xctest */,
+				544C63D22E1829C5007704B4 /* DeviceActivityExtention.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -103,6 +150,28 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		544C63D12E1829C5007704B4 /* DeviceActivityExtention */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 544C63DF2E1829C5007704B4 /* Build configuration list for PBXNativeTarget "DeviceActivityExtention" */;
+			buildPhases = (
+				544C63CE2E1829C5007704B4 /* Sources */,
+				544C63CF2E1829C5007704B4 /* Frameworks */,
+				544C63D02E1829C5007704B4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				544C63D32E1829C5007704B4 /* DeviceActivityExtention */,
+			);
+			name = DeviceActivityExtention;
+			packageProductDependencies = (
+			);
+			productName = DeviceActivityExtention;
+			productReference = 544C63D22E1829C5007704B4 /* DeviceActivityExtention.appex */;
+			productType = "com.apple.product-type.extensionkit-extension";
+		};
 		54D9C2C12CF989F200302B1E /* noPhone */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 54D9C2E62CF989F400302B1E /* Build configuration list for PBXNativeTarget "noPhone" */;
@@ -110,10 +179,12 @@
 				54D9C2BE2CF989F200302B1E /* Sources */,
 				54D9C2BF2CF989F200302B1E /* Frameworks */,
 				54D9C2C02CF989F200302B1E /* Resources */,
+				544C63E32E1829C5007704B4 /* Embed ExtensionKit Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				544C63DD2E1829C5007704B4 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				54D9C2C42CF989F200302B1E /* noPhone */,
@@ -174,9 +245,12 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1610;
+				LastSwiftUpdateCheck = 1620;
 				LastUpgradeCheck = 1610;
 				TargetAttributes = {
+					544C63D12E1829C5007704B4 = {
+						CreatedOnToolsVersion = 16.2;
+					};
 					54D9C2C12CF989F200302B1E = {
 						CreatedOnToolsVersion = 16.1;
 					};
@@ -211,11 +285,19 @@
 				54D9C2C12CF989F200302B1E /* noPhone */,
 				54D9C2D12CF989F400302B1E /* noPhoneTests */,
 				54D9C2DB2CF989F400302B1E /* noPhoneUITests */,
+				544C63D12E1829C5007704B4 /* DeviceActivityExtention */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		544C63D02E1829C5007704B4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		54D9C2C02CF989F200302B1E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -240,6 +322,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		544C63CE2E1829C5007704B4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		54D9C2BE2CF989F200302B1E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -264,6 +353,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		544C63DD2E1829C5007704B4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 544C63D12E1829C5007704B4 /* DeviceActivityExtention */;
+			targetProxy = 544C63DC2E1829C5007704B4 /* PBXContainerItemProxy */;
+		};
 		54D9C2D42CF989F400302B1E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 54D9C2C12CF989F200302B1E /* noPhone */;
@@ -277,6 +371,60 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		544C63E02E1829C5007704B4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = DeviceActivityExtention/DeviceActivityExtention.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = LRLZS967P7;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DeviceActivityExtention/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = DeviceActivityExtention;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "----.noPhone.DeviceActivityExtention";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		544C63E12E1829C5007704B4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = DeviceActivityExtention/DeviceActivityExtention.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = LRLZS967P7;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DeviceActivityExtention/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = DeviceActivityExtention;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "----.noPhone.DeviceActivityExtention";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		54D9C2E42CF989F400302B1E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -533,6 +681,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		544C63DF2E1829C5007704B4 /* Build configuration list for PBXNativeTarget "DeviceActivityExtention" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				544C63E02E1829C5007704B4 /* Debug */,
+				544C63E12E1829C5007704B4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		54D9C2BD2CF989F200302B1E /* Build configuration list for PBXProject "noPhone" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

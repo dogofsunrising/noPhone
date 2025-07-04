@@ -5,9 +5,10 @@ struct MoniterView: View {
     var body: some View {
         VStack {
             if(!isRecode){
-                RecoMainView(isRecode: $isRecode)
-                ScreenTimeMainView()
-                Spacer()
+                VStack {
+                    RecoMainView(isRecode: $isRecode)
+                    ScreenTimeMainView()
+                }
             }else{
                 RecodeView(isRecode: $isRecode)
             }

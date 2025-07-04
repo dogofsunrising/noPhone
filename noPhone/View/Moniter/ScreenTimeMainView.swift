@@ -5,53 +5,73 @@ import FamilyControls
 struct ScreenTimeMainView: View {
     @State var blur: Bool = true
 
-        var body: some View {
-        ZStack {
-            // ぼかしたい対象全体
-            VStack {
-                ScScreenTimeBlurView()
-            }
-            // ぼかしと操作無効化
-            .blur(radius: blur ? 5 : 0)
-            .disabled(blur)
-
-            // オーバーレイとしてタップ防止＋ぼかし中の表示（オプション）
-            if blur {
-                Color.black.opacity(0.3)
-                    .edgesIgnoringSafeArea(.all)
-                Button {
-                    Task {
-                        await authorize()
+    var body: some View {
+        VStack{
+            ZStack {
+                // ぼかしたい対象全体
+                VStack {
+                    ScScreenTimeBlurView()
+                }
+                // ぼかしと操作無効化
+                .blur(radius: blur ? 5 : 0)
+                .disabled(blur)
+                
+                // オーバーレイとしてタップ防止＋ぼかし中の表示（オプション）
+                if blur {
+                    Color.black.opacity(0.3)
+                        .edgesIgnoringSafeArea(.all)
+                    Button {
+                        Task {
+                            await authorize()
+                        }
+                    } label: {
+                        ZStack {
+                            Rectangle()
+                                .fill(Color.white)
+                                .frame(width: 200, height: 50)
+                                .cornerRadius(10)
+                                .opacity(0.5)
+                                .shadow(radius: 10)
+                            Text("Screen Timeの監視を許可")
+                        }
+                        
                     }
-                } label: {
-                    ZStack {
-                        Rectangle()
-                            .fill(Color.white)
-                            .frame(width: 200, height: 50)
-                            .cornerRadius(10)
-                            .opacity(0.5)
-                            .shadow(radius: 10)
-                        Text("Screen Timeの監視を許可")
-                    }
-                    
                 }
             }
         }
         .onAppear {
-            _ = AuthorizationCenter.shared.$authorizationStatus
-                .sink() {_ in
-                switch AuthorizationCenter.shared.authorizationStatus {
-                case .notDetermined:
-                    blur = true
-                case .denied:
-                    blur = true
-                case .approved:
-                    blur = false
-                @unknown default:
-                    print("authorizationStatus error")
-                    blur = true
-                }
+            // 初期状態を即チェック
+            switch AuthorizationCenter.shared.authorizationStatus {
+            case .notDetermined:
+                blur = true
+                print("初回チェック: a")
+            case .denied:
+                blur = true
+                print("初回チェック: c")
+            case .approved:
+                blur = false
+                print("初回チェック: s")
+            @unknown default:
+                blur = true
             }
+            
+            // 状態の変化を監視
+            _ = AuthorizationCenter.shared.$authorizationStatus
+                .sink { _ in
+                    switch AuthorizationCenter.shared.authorizationStatus {
+                    case .notDetermined:
+                        blur = true
+                        print("更新: a")
+                    case .denied:
+                        blur = true
+                        print("更新: c")
+                    case .approved:
+                        blur = false
+                        print("更新: s")
+                    @unknown default:
+                        blur = true
+                    }
+                }
         }
     }
 }
