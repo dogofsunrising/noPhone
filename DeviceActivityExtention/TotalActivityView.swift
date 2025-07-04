@@ -1,6 +1,7 @@
 import SwiftUI
 import ManagedSettings
 import DeviceActivity
+import FamilyControls
 import Charts
 
 struct TotalActivityView: View {
@@ -11,57 +12,58 @@ struct TotalActivityView: View {
     
     var body: some View {
         VStack {
-            HStack{
-                switch totalActivity.segmentInterval {
-                case .hourly:
-                    Chart(totalActivity.durations, id: \.dateInterval.start) { segment in
-                        BarMark(
-                            x: .value("Time", segment.dateInterval.start, unit: .hour),
-                            y: .value("Duration (min)", segment.duration / 60)
-                        )
-                    }
-                    .chartXAxisLabel("時間")
-                    .chartYAxisLabel("使用時間（分）")
-                    .frame(height: 300)
-                    
-                case .daily:
-                    Chart(totalActivity.durations, id: \.dateInterval.start) { segment in
-                        BarMark(
-                            x: .value("Date", segment.dateInterval.start, unit: .day),
-                            y: .value("Duration (min)", segment.duration / 60)
-                        )
-                    }
-                    .chartXAxisLabel("日付")
-                    .chartYAxisLabel("使用時間（分）")
-                    .frame(height: 300)
-                    
-                case .weekly:
-                    Chart(totalActivity.durations, id: \.dateInterval.start) { segment in
-                        BarMark(
-                            x: .value("Week", segment.dateInterval.start, unit: .weekOfYear),
-                            y: .value("Duration (min)", segment.duration / 60)
-                        )
-                    }
-                    .chartXAxisLabel("週")
-                    .chartYAxisLabel("使用時間（分）")
-                    .frame(height: 300)
-                    
-                @unknown default:
-                    Text("未対応の時間区切りです")
-                }
-                
-                VStack(alignment: .leading) {
-                    Text("カテゴリ別使用時間")
-                    List(categoryDurations.sorted(by: { $0.value > $1.value }), id: \.key) { key, value in
-                        HStack {
-                            Text(key)
-                            Spacer()
-                            Text("\(value) 分")
+            ZStack{
+                HStack{
+                    switch totalActivity.segmentInterval {
+                    case .hourly:
+                        Chart(totalActivity.durations, id: \.dateInterval.start) { segment in
+                            BarMark(
+                                x: .value("Time", segment.dateInterval.start, unit: .hour),
+                                y: .value("Duration (min)", segment.duration / 60)
+                            )
                         }
+                        .chartXAxisLabel("時間")
+                        .chartYAxisLabel("使用時間（分）")
+                        .frame(height: 300)
                         
+                    case .daily:
+                        Chart(totalActivity.durations, id: \.dateInterval.start) { segment in
+                            BarMark(
+                                x: .value("Date", segment.dateInterval.start, unit: .day),
+                                y: .value("Duration (min)", segment.duration / 60)
+                            )
+                        }
+                        .chartXAxisLabel("日付")
+                        .chartYAxisLabel("使用時間（分）")
+                        .frame(height: 300)
+                        
+                    case .weekly:
+                        Chart(totalActivity.durations, id: \.dateInterval.start) { segment in
+                            BarMark(
+                                x: .value("Week", segment.dateInterval.start, unit: .weekOfYear),
+                                y: .value("Duration (min)", segment.duration / 60)
+                            )
+                        }
+                        .chartXAxisLabel("週")
+                        .chartYAxisLabel("使用時間（分）")
+                        .frame(height: 300)
+                        
+                    @unknown default:
+                        Text("未対応の時間区切りです")
                     }
-                    .clipShape(RoundedRectangle(cornerRadius: 16)) // 角丸
-                    .scenePadding(.bottom)
+                    
+                    VStack(alignment: .leading) {
+                        List(categoryDurations.sorted(by: { $0.value > $1.value }), id: \.key) { key, value in
+                            HStack {
+                                Text(key)
+                                Spacer()
+                                Text("\(value) 分")
+                            }
+                            
+                        }
+                        .clipShape(RoundedRectangle(cornerRadius: 16)) // 角丸
+                        .scenePadding(.bottom)
+                    }
                 }
             }
         }
@@ -117,3 +119,6 @@ func getJapaneseCategoryName(from localizedName: String) -> String {
         return localizedName // 不明な場合はそのまま返す
     }
 }
+
+
+
