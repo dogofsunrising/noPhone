@@ -1,4 +1,5 @@
 import SwiftUI
+import FamilyControls
 
 struct SettingView: View {
     @State private var channels: [Channel] = []
@@ -15,6 +16,8 @@ struct SettingView: View {
     @State private var selectedChannelIndex: Int = 0
     
     @State private var isChannelAdd: Bool = false
+    
+    @State var blur: Bool = true
     var body: some View {
         ZStack{
             Color(.systemBackground)
@@ -49,6 +52,19 @@ struct SettingView: View {
                     .padding()
                     .background(Color(red: 0, green: 0, blue: 0, opacity: 0.1))
                     .cornerRadius(5)
+                    
+                    Button (action: {
+                        AlertType = .auth
+                        isShowAlert = true
+                    } ) {
+                        ZStack{
+                            if(blur){
+                                Text("ScreenTimeへのアクセスを許可")
+                            } else {
+                                Text("ScreenTimeへのアクセスを制限")
+                            }
+                        }
+                    }
                     
                     VStack{
                         
@@ -98,6 +114,39 @@ struct SettingView: View {
                             isShowAlert = false
                         }
                     )
+                case .auth:
+                if(blur){
+                    return Alert(
+                        title: Text("スクリーンタイム認証"),
+                        message: Text("スクリーンタイムの取得を許可しますか？"),
+                        primaryButton: .destructive(Text("許可")) {
+                            Task{
+                                await authorize()
+                                isShowAlert = false
+                                blur = false
+                            }
+                        },
+                        secondaryButton: .cancel(Text("キャンセル")) {
+                            isShowAlert = false
+                        }
+                    )
+                } else {
+                    return Alert(
+                        title: Text("スクリーンタイム認証"),
+                        message: Text("スクリーンタイムの取得を制限しますか？"),
+                        primaryButton: .destructive(Text("制限")) {
+                            Task{
+                                await deauthorize()
+                                isShowAlert = false
+                                blur = true
+                            }
+                        },
+                        secondaryButton: .cancel(Text("キャンセル")) {
+                            isShowAlert = false
+                        }
+                    )
+                }
+                
                 case .non:
                     return Alert(
                         title: Text("無効の入力"),
@@ -112,6 +161,21 @@ struct SettingView: View {
                 channels = decoded
             }
             username = UserDefaults.standard.string(forKey: "username") ?? ""
+            
+            _ = AuthorizationCenter.shared.$authorizationStatus
+                .sink() {_ in
+                switch AuthorizationCenter.shared.authorizationStatus {
+                case .notDetermined:
+                    blur = true
+                case .denied:
+                    blur = true
+                case .approved:
+                    blur = false
+                @unknown default:
+                    print("authorizationStatus error")
+                    blur = true
+                }
+            }
         }
         .onDisappear {
             if let encoded = try? JSONEncoder().encode(channels) {
@@ -119,6 +183,13 @@ struct SettingView: View {
             }
             UserDefaults.standard.set(username, forKey: "username")
             UserDefaults.standard.set(selectedtimer.rawValue, forKey: "timertype")
+        }
+    }
+    func authorize() async {
+        do {
+            try await AuthorizationCenter.shared.requestAuthorization(for: .individual)
+        } catch {
+                
         }
     }
 }

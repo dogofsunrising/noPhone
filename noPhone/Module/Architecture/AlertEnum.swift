@@ -8,5 +8,6 @@ enum AlertType {
 
 enum SettingAlertType {
     case channelDelete(index: Int)
+    case auth
     case non
 }

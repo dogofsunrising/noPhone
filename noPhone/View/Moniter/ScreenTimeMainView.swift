@@ -9,17 +9,7 @@ struct ScreenTimeMainView: View {
         ZStack {
             // ぼかしたい対象全体
             VStack {
-                Button {
-                    Task {
-                        await deauthorize()
-                    }
-                } label: {
-                    Text("Check")
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                }
+                
             }
             // ぼかしと操作無効化
             .blur(radius: blur ? 5 : 0)
@@ -45,7 +35,6 @@ struct ScreenTimeMainView: View {
                     }
                     
                 }
-
             }
         }
         .onAppear {
