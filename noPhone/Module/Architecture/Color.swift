@@ -3,7 +3,7 @@ import SwiftUI
 var darkBlue = Color(hex: "1E90FF")
 var mediumBlue = Color(hex: "63B8FF")
 var lightBlue = Color(hex: "B0E2FF")
-
+// TODO: リストの赤色をもっと暗くしたい
 var lightPink = Color(hex: "ffc0cb")
 
 extension Color {

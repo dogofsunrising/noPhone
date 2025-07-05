@@ -33,19 +33,6 @@ struct RecodeView: View {
                 }) {
                     Text("戻る")
                         .foregroundStyle(ButtonColor(how: .text, scheme: colorScheme))
-                },
-                trailing: Button(action: {
-                    withAnimation {
-                        graph.toggle()
-                    }
-                }) {
-                    if graph {
-                        Text("グラフを閉じる")
-                            .foregroundStyle(ButtonColor(how: .text, scheme: colorScheme))
-                    } else {
-                        Text("グラフを表示")
-                            .foregroundStyle(ButtonColor(how: .text, scheme: colorScheme))
-                    }
                 }
             )
         }

@@ -52,7 +52,6 @@ struct RecoListView: View {
                 }
             }
             .scrollContentBackground(.hidden)
-            .background(GradientBackgroundView())
             .scrollIndicators(.hidden)
         }
     }
