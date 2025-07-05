@@ -11,8 +11,10 @@ struct HomeView: View {
     var body: some View {
         ZStack{
             Home2View(popCheck: $popCheck, textInputView: $textInputView,title: $title)
+                .shadow(color: .black.opacity(0.2), radius: 10, x: 0, y: 5)
             if(textInputView){
                 textView(textInputView: $textInputView,title: $title)
+                    .shadow(color: .black.opacity(0.2), radius: 10, x: 0, y: 5)
             }
             
             if(popCheck){

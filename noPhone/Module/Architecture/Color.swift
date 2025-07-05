@@ -32,7 +32,7 @@ enum HowColor {
 func ButtonColor(how:HowColor, scheme: ColorScheme) -> Color {
     switch how {
     case .button:
-        return scheme == .dark ? Color(hex: "000080") : Color(hex: "e0ffff") // TODO: ダークモードの青が暗すぎる
+        return scheme == .dark ? Color(hex: "4169e1") : Color(hex: "e0ffff") // TODO: ダークモードの青が暗すぎる
     case .text:
         return scheme == .dark ? Color(hex: "ffffff") : Color(hex: "1E90FF")
     case .default:
