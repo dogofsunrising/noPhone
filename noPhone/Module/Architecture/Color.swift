@@ -34,7 +34,7 @@ func ButtonColor(how:HowColor, scheme: ColorScheme) -> Color {
     case .button:
         return scheme == .dark ? Color(hex: "000080") : Color(hex: "e0ffff") // dark : light
     case .text:
-        return scheme == .dark ? Color(hex: "e0ffff") : Color(hex: "1E90FF")
+        return scheme == .dark ? Color(hex: "ffffff") : Color(hex: "1E90FF")
     case .default:
         return scheme == .dark ? Color(hex: "ffffff") : Color(hex: "000000")
     }

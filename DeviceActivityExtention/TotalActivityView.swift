@@ -28,7 +28,7 @@ struct TotalActivityView: View {
                         
                     case .daily:
                         Chart(totalActivity.durations, id: \.dateInterval.start) { segment in
-                            BarMark(
+                            LineMark(
                                 x: .value("Date", segment.dateInterval.start, unit: .day),
                                 y: .value("Duration (min)", segment.duration / 60)
                             )
@@ -36,6 +36,7 @@ struct TotalActivityView: View {
                         .chartXAxisLabel("日付")
                         .chartYAxisLabel("使用時間（分）")
                         .frame(height: 300)
+
                         
                     case .weekly:
                         Chart(totalActivity.durations, id: \.dateInterval.start) { segment in

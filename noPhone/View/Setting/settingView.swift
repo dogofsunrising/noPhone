@@ -41,6 +41,24 @@ struct SettingView: View {
                         .padding(.horizontal, 20)
                         .focused($isInputActive)
                     
+                    Button (action: {
+                        AlertType = .auth
+                        isShowAlert = true
+                    } ) {
+                        ZStack{
+                            Rectangle()
+                                .foregroundColor(Color(red: 0, green: 0, blue: 0, opacity: 0.1))
+                                .frame(width: .infinity, height: 50)
+                                .cornerRadius(20)
+                                .padding(.horizontal)
+                            if(blur){
+                                Text("ScreenTimeへのアクセスを許可")
+                            } else {
+                                Text("ScreenTimeへのアクセスを制限")
+                            }
+                        }
+                    }
+                    
                     HStack{
                         Text("タイマーカスタム")
                         Picker("タイマー画面の設定", selection: $selectedtimer) {
@@ -53,18 +71,7 @@ struct SettingView: View {
                     .background(Color(red: 0, green: 0, blue: 0, opacity: 0.1))
                     .cornerRadius(5)
                     
-                    Button (action: {
-                        AlertType = .auth
-                        isShowAlert = true
-                    } ) {
-                        ZStack{
-                            if(blur){
-                                Text("ScreenTimeへのアクセスを許可")
-                            } else {
-                                Text("ScreenTimeへのアクセスを制限")
-                            }
-                        }
-                    }
+                    
                     
                     VStack{
                         

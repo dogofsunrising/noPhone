@@ -72,15 +72,18 @@ struct Home2View: View {
                 } label: {
                     HStack {
                         Text("Title: ")
+                            .foregroundColor(ButtonColor(how: .text, scheme: colorScheme))
                         if(title == ""){
                             Text("Not Set")
+                                .foregroundColor(ButtonColor(how: .text, scheme: colorScheme))
                         } else {
                             Text(title)
+                                .foregroundColor(ButtonColor(how: .text, scheme: colorScheme))
                         }
                         Spacer()
                     }
                     .padding() // 必要なら余白
-                    .background(Color.cyan) // 背景色を設定
+                    .background(ButtonColor(how: .button, scheme: colorScheme)) // 背景色を設定
                     .cornerRadius(20)
 
                 }
