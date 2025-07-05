@@ -57,8 +57,9 @@ struct Home2View: View {
                         ZStack{
                             Rectangle()
                                 .foregroundColor(ButtonColor(how: .button, scheme: colorScheme))
-                                .frame(width: 250, height: 150)
+                                .frame(width: .infinity, height: 100)
                                 .cornerRadius(20)
+                                .padding(.horizontal)
                             Text("Start")
                                 .font(.system(size: 40, weight: .bold))
                                 .foregroundColor(ButtonColor(how: .text, scheme: colorScheme))

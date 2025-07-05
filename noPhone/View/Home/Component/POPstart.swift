@@ -13,6 +13,9 @@ struct POPstartView: View {
     @State private var errorMessage: String? = nil // エラーメッセージ
     @State private var isSaving = false
     
+    @State private var channels: [Channel] = []
+
+    
     var body: some View {
         ZStack {
             // 背景を透明な黒に設定
@@ -61,7 +64,15 @@ struct POPstartView: View {
                             .cornerRadius(8)
                             .padding(.horizontal, 20)
                     }
-                    
+                    VStack{
+                        HStack{
+                            Text("プラットフォーム")
+                            Spacer()
+                        }
+                        
+                        POPChannelsView(channels: $channels)
+                        
+                    }
                     // エラーメッセージを表示
                     if let errorMessage = errorMessage {
                         Text(errorMessage)
@@ -91,7 +102,7 @@ struct POPstartView: View {
                                 }
                             }
                         }) {
-                            Text("確認して始める")
+                            Text("作業を始める")
                                 .foregroundColor(ButtonColor(how: .text, scheme: colorScheme))
                                 .padding(.top, 10)
                         }
@@ -119,6 +130,11 @@ struct POPstartView: View {
                 isButton = false
             } else {
                 isButton = true
+            }
+            
+            if let data = UserDefaults.standard.data(forKey: "channels"),
+               let decoded = try? JSONDecoder().decode([Channel].self, from: data) {
+                channels = decoded
             }
         }
     }
