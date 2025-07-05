@@ -42,7 +42,9 @@ struct StopView : View {
     
     @State private var end:Bool = false
     
-    let musicplayer = SoundPlayer() 
+    let musicplayer = SoundPlayer()
+    
+    @State private var aiueo:Bool = true
     var body: some View {
         ZStack{
             VStack {
@@ -200,28 +202,30 @@ struct StopView : View {
     
     
     private func Report(realtime: Int, close: Bool, inittime: Int) async {
-        
-        var Ktime = inittime - realtime
-        if Ktime < 0 {
-            Ktime = realtime
-        }
-        
-        recode(date: date, realtime: Ktime, settingtime: inittime, close: close)
-        Task.detached {
-            let reporter = API()
-            if let message = await reporter.closeAPI(time: Ktime, close: close) {
-                await MainActor.run {
-                    self.popmess = message
-                    self.AlertType = close ? .finish : .miss
-                    self.Moniter = true
-                    self.showAlert = true
-                }
-            } else {
-                await MainActor.run {
-                    self.popmess = close ? "おめでとうございます" : "封印しましょう"
-                    self.AlertType = close ? .finish : .miss
-                    self.Moniter = true
-                    self.showAlert = true
+        if(aiueo){
+            aiueo = false
+            var Ktime = inittime - realtime
+            if Ktime < 0 {
+                Ktime = realtime
+            }
+            
+            recode(date: date, realtime: Ktime, settingtime: inittime, close: close)
+            Task.detached {
+                let reporter = API()
+                if let message = await reporter.closeAPI(time: Ktime, close: close) {
+                    await MainActor.run {
+                        self.popmess = message
+                        self.AlertType = close ? .finish : .miss
+                        self.Moniter = true
+                        self.showAlert = true
+                    }
+                } else {
+                    await MainActor.run {
+                        self.popmess = close ? "おめでとうございます" : "封印しましょう"
+                        self.AlertType = close ? .finish : .miss
+                        self.Moniter = true
+                        self.showAlert = true
+                    }
                 }
             }
         }
