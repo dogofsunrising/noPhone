@@ -1,4 +1,5 @@
 import SwiftUI
+import ManagedSettings
 import CoreMotion
 
 struct StopView : View {
@@ -45,6 +46,8 @@ struct StopView : View {
     let musicplayer = SoundPlayer()
     
     @State private var aiueo:Bool = true
+    
+    @StateObject var store = ManagedSettingsStore()
     var body: some View {
         ZStack{
             VStack {
@@ -82,6 +85,7 @@ struct StopView : View {
 //        }
 //        .disabled(!interstitial.interstitialAdLoaded)
         .onAppear {
+            store.siri.denySiri = true
             time = UserDefaults.standard.integer(forKey: "selectedTimer")
             initimer = time
             if(time != 0){
@@ -204,6 +208,7 @@ struct StopView : View {
     private func Report(realtime: Int, close: Bool, inittime: Int) async {
         if(aiueo){
             aiueo = false
+            store.clearAllSettings()
             var Ktime = inittime - realtime
             if Ktime < 0 {
                 Ktime = realtime

@@ -42,11 +42,11 @@ public struct AppShieldView: View {
                                 store.shield.applications = applications.isEmpty ? nil : applications
                                 
                                 let categories = selection.categoryTokens
-                                store.shield.applicationCategories = applications.isEmpty ? nil : .specific(categories)
+                                store.shield.applicationCategories = categories.isEmpty ? nil : .specific(categories)
                                 
                                 let webDomains = selection.webDomainTokens
-                                store.shield.webDomains = applications.isEmpty ? nil : webDomains
-                                store.shield.webDomainCategories = applications.isEmpty ? nil : .specific(categories)
+                                store.shield.webDomains = webDomains.isEmpty ? nil : webDomains
+                                store.shield.webDomainCategories = categories.isEmpty ? nil : .specific(categories)
                             } label: {
                                 Text("選択したアプリの制限を開始")
                                     .frame(maxWidth: .infinity)
