@@ -26,6 +26,7 @@ enum HowColor {
     case button
     case text
     case undefault
+    case aka
     case `default`
     
 }
@@ -38,6 +39,8 @@ func ButtonColor(how:HowColor, scheme: ColorScheme) -> Color {
         return scheme == .dark ? Color(hex: "ffffff") : Color(hex: "1E90FF")
     case .undefault:
         return scheme == .dark ? Color(hex: "000000") : Color(hex: "ffffff")
+    case .aka:
+        return scheme == .dark ? Color(hex: "ff0000") : Color(hex: "ffc0cb")
     case .default:
         return scheme == .dark ? Color(hex: "ffffff") : Color(hex: "000000")
     }

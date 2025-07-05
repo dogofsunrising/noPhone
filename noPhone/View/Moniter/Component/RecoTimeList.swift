@@ -29,7 +29,6 @@ struct RecoListView: View {
                                 
                                 Text(recodeTimeList[index].title)
                                     .font(.title2)
-                                    .foregroundColor(recodeTimeList[index].close ? .blue : .red)
                                 Spacer()
                                 
                             }
@@ -47,7 +46,7 @@ struct RecoListView: View {
                                 Spacer()
                             }
                         }.padding(.vertical, 8)
-                            .listRowBackground(recodeTimeList[index].close == true ? ButtonColor(how: .button, scheme: colorScheme) : lightPink)
+                            .listRowBackground(recodeTimeList[index].close == true ? ButtonColor(how: .button, scheme: colorScheme) : ButtonColor(how: .aka, scheme: colorScheme))
                     }
                 }
             }

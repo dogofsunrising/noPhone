@@ -86,7 +86,7 @@ struct Home2View: View {
                         Spacer()
                     }
                     .padding() // 必要なら余白
-                    .background(ButtonColor(how: .button, scheme: colorScheme)) // 背景色を設定
+                    .background(Color(.systemGray5)) // 背景色を設定
                     .cornerRadius(20)
 
                 }
