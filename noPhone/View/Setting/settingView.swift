@@ -2,6 +2,8 @@ import SwiftUI
 import FamilyControls
 
 struct SettingView: View {
+    @Environment(\.colorScheme) var colorScheme
+    
     @State private var channels: [Channel] = []
     @State private var username: String = UserDefaults.standard.string(forKey: "username") ?? ""
     @State private var selectedtimer: TimerType = TimerType(rawValue: UserDefaults.standard.string(forKey: "timertype") ?? "") ?? .default
@@ -19,90 +21,115 @@ struct SettingView: View {
     
     @State var blur: Bool = true
     var body: some View {
-        ZStack{
-            Color(.systemBackground)
+        ZStack {
+            Color(.systemGroupedBackground)
                 .ignoresSafeArea()
                 .onTapGesture {
                     isInputActive = false
                 }
-            
+
             VStack {
                 Spacer()
-                // 白い四角形
-                VStack(spacing: 10) {
+                VStack(spacing: 16) {
                     Text("設定の変更")
-                        .font(.headline)
-                    
-                    // ユーザー名を入力するTextField
+                        .font(.title2.bold())
+                        .padding(.top)
+
+                    // ユーザー名入力欄
                     TextField("ユーザー名を入力", text: $username)
                         .padding()
-                        .background(Color(UIColor.systemGray6))
-                        .cornerRadius(8)
-                        .padding(.horizontal, 20)
+                        .background(Color(.systemGray6))
+                        .cornerRadius(12)
+                        .padding(.horizontal)
                         .focused($isInputActive)
-                    
-                    Button (action: {
+
+                    // ScreenTime ボタン
+                    Button(action: {
                         AlertType = .auth
                         isShowAlert = true
-                    } ) {
-                        ZStack{
-                            Rectangle()
-                                .foregroundColor(Color(red: 0, green: 0, blue: 0, opacity: 0.1))
-                                .frame(width: .infinity, height: 50)
-                                .cornerRadius(20)
-                                .padding(.horizontal)
-                            if(blur){
-                                Text("ScreenTimeへのアクセスを許可")
-                            } else {
-                                Text("ScreenTimeへのアクセスを制限")
-                            }
-                        }
+                    }) {
+                        Text(blur ? "ScreenTimeへのアクセスを許可" : "ScreenTimeへのアクセスを制限")
+                            .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.blue.opacity(0.2))
+                            .foregroundColor(.blue)
+                            .cornerRadius(12)
+                            .padding(.horizontal)
                     }
-                    
-                    HStack{
+
+                    // タイマーカスタム設定
+                    HStack {
                         Text("タイマーカスタム")
-                        Picker("タイマー画面の設定", selection: $selectedtimer) {
+                            .font(.subheadline)
+                        Spacer()
+                        Picker("タイマー", selection: $selectedtimer) {
                             Text("default").tag(TimerType.default)
                             Text("circle").tag(TimerType.circle)
                         }
                         .pickerStyle(.menu)
                     }
                     .padding()
-                    .background(Color(red: 0, green: 0, blue: 0, opacity: 0.1))
-                    .cornerRadius(5)
-                    
-                    
-                    
-                    VStack{
-                        
-                        ChannelsView(channels: $channels, PageIndex: $selectedChannelIndex, isShowPage: $isChannelPage, ChannelAdd: $isChannelAdd)
-                        HStack{
-                            Spacer()
-//                            Link("チャンネルIDとは？", destination: URL(string: "https://support.discord.com/hc/ja/articles/206346498-%E3%83%A6%E3%83%BC%E3%82%B6%E3%83%BC-%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC-%E3%83%A1%E3%83%83%E3%82%BB%E3%83%BC%E3%82%B8ID%E3%81%AF%E3%81%A9%E3%81%93%E3%81%A7%E8%A6%8B%E3%81%A4%E3%81%91%E3%82%89%E3%82%8C%E3%82%8B")!)
+                    .background(Color(.systemGray5))
+                    .cornerRadius(10)
+                    .padding(.horizontal)
+
+                    Divider().padding(.horizontal)
+
+                    // チャンネル設定
+                    VStack(spacing: 8) {
+                        ChannelsView(channels: $channels,
+                                     PageIndex: $selectedChannelIndex,
+                                     isShowPage: $isChannelPage,
+                                     ChannelAdd: $isChannelAdd)
+
+                        if channels.isEmpty {
+                            Text("チャンネルが未設定です")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+
+                        // チャンネルIDとはリンク
+//                        HStack {
+//                            Spacer()
+//                            Link("チャンネルIDとは？", destination: URL(string: "https://support.discord.com/hc/ja/articles/206346498")!)
 //                                .font(.caption)
 //                                .foregroundColor(.blue)
-//                                .padding(.horizontal, 20)
-                        }
+//                                .padding(.trailing, 16)
+//                        }
                     }
-                    if(channels.isEmpty){
-                        Spacer()
-                    }
-                    
-                    // エラーメッセージを表示
+                    .padding(.horizontal)
+
+                    // エラー表示
                     if let errorMessage = errorMessage {
                         Text(errorMessage)
                             .foregroundColor(.red)
                             .font(.caption)
+                            .padding(.top, 4)
                     }
-                    
+
+                    Spacer()
                 }
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(ButtonColor(how: .undefault, scheme: colorScheme))
+                        .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 4)
+                )
+                .padding(.horizontal)
                 Spacer()
             }
-            
-            if(isChannelPage){
-                ChannelPageView(isPage: $isChannelPage, channelIndex: $selectedChannelIndex,channel: channels[selectedChannelIndex] ,isShowAlert: $isShowAlert, AlertType: $AlertType)
-            } else if(isChannelAdd){
-                ChannelAddPageView(isPage: $isChannelAdd, channels: $channels)
+
+            // ページ遷移部分
+            if isChannelPage {
+                ChannelPageView(isPage: $isChannelPage,
+                                channelIndex: $selectedChannelIndex,
+                                channel: channels[selectedChannelIndex],
+                                isShowAlert: $isShowAlert,
+                                AlertType: $AlertType)
+            } else if isChannelAdd {
+                ChannelAddPageView(isPage: $isChannelAdd,
+                                   channels: $channels)
             }
         }
         .alert(isPresented: $isShowAlert) {
